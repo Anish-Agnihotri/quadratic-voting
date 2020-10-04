@@ -8,12 +8,18 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/cli": "^2.8.0",
+    "@prisma/client": "^2.8.0",
+    "axios": "^0.20.0",
     "moment": "^2.29.0",
     "momentjs": "^2.0.0",
     "next": "9.5.3",
     "react": "16.13.1",
     "react-accessible-accordion": "^3.3.3",
     "react-datetime": "^3.0.4",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-spinners": "^0.9.0",
+    "swr": "^0.3.5",
+    "unfetch": "^4.2.0"
   }
 }

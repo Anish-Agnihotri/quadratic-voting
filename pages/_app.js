@@ -3,5 +3,6 @@ import "react-accessible-accordion/dist/fancy-example.css"; // React accordion s
 
 // Default application setup
 export default function App({ Component, pageProps }) {
+  // Return page component with props
   return <Component {...pageProps} />;
 }

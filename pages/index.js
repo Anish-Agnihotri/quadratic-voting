@@ -21,7 +21,7 @@ export default function Home() {
         {/* Home buttons */}
         <div className="home__cta">
           <div className="home__cta_button">
-            <span>Image here</span>
+            <img src="/vectors/create_event.svg" alt="Create event" />
             <h2>Create an event</h2>
             <p>Setup Quadratic Voting for your event.</p>
             <Link href="/create">
@@ -29,7 +29,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="home__cta_button">
-            <span>Image here</span>
+            <img src="/vectors/place_vote.svg" alt="Place vote" />
             <h2>Place your vote</h2>
             <p>Use your secret code to place votes.</p>
             <Link href="/vote">
@@ -69,7 +69,8 @@ export default function Home() {
 
           .home__cta_button {
             display: inline-block;
-            width: 270px;
+            max-width: 270px;
+            width: calc(100% - 70px);
             background-color: #fff;
             margin: 20px;
             border-radius: 8px;
@@ -77,6 +78,11 @@ export default function Home() {
             box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
             padding: 15px;
             vertical-align: top;
+          }
+
+          .home__cta_button > img {
+            height: 90px;
+            margin-top: 15px;
           }
 
           .home__cta_button > h2 {

@@ -13,8 +13,8 @@ export default function Navigation(props) {
       {/* Scoped styling */}
       <style jsx>{`
         .navigation {
-          background-color: #e7eaf3;
-          border-bottom: 1px solid #ccd2e5;
+          background-color: #00d182;
+          border-bottom: 1px solid #0f0857;
           font-size: 18px;
           padding: 10px 20px 0px 20px;
           height: 30px;

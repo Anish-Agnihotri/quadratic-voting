@@ -5,18 +5,21 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion"; // React accordion
+import axios from "axios"; // Request handling
+import moment from "moment"; // Date handling
 import { useState } from "react"; // State handling
 import Datetime from "react-datetime"; // Datetime component
 import Layout from "components/layout"; // Layout wrapper
+import Loader from "components/loader"; // Loader component
+import { useRouter } from "next/router"; // Router hooks
 import Navigation from "components/navigation"; // Navigation bar
 
 // Initial global settings
 const defaultGlobalSettings = {
   num_voters: 10,
   credits_per_voter: 5,
-  event_start_date: new Date(),
-  // Tomorrow's date
-  event_end_date: new Date().setDate(new Date().getDate() + 1),
+  event_start_date: moment(),
+  event_end_date: moment().add(1, "days"),
 };
 
 // Initial empty subject
@@ -27,12 +30,16 @@ const defaultCurrentSubject = {
 };
 
 export default function Create() {
+  // Router object
+  const router = useRouter();
   // Global settings object
   const [globalSettings, setGlobalSettings] = useState(defaultGlobalSettings);
   // Current subject object
   const [currentSubject, setCurrentSubject] = useState(defaultCurrentSubject);
   // Array of all subjects
   const [subjects, setSubjects] = useState([]);
+  // Loading state
+  const [loading, setLoading] = useState(false);
 
   /**
    * Sets the number of voters (between 1 - 250)
@@ -110,6 +117,28 @@ export default function Create() {
     setSubjects(subjects.filter((item, i) => i !== index));
   };
 
+  /**
+   * POST event creation endpoint
+   */
+  const submitEvent = async () => {
+    // Toggle loading
+    setLoading(true);
+
+    // Post create endpoint and retrieve event details
+    const eventDetails = await axios.post("/api/events/create", {
+      ...globalSettings,
+      subjects,
+    });
+
+    // Toggle loading
+    setLoading(false);
+
+    // Redirect to events page on submission
+    router.push(
+      `/event?id=${eventDetails.data.id}&secret=${eventDetails.data.secret_key}`
+    );
+  };
+
   return (
     <Layout>
       {/* Navigation header */}
@@ -140,7 +169,7 @@ export default function Create() {
           <p>
             These settings are used to generate your audience's individual
             participation links. You can select the number of voters, how many
-            votes credits they'll each receive, and a start and end date for
+            vote credits they'll each receive, and a start and end date for
             voting.
           </p>
 
@@ -201,7 +230,7 @@ export default function Create() {
           <p>
             These settings enable you to add subjects that voters can delegate
             their voting credits to. You can choose to add a subject title,
-            description, and a link to more information.
+            description, and link.
           </p>
 
           {/* Listing of all subjects via accordion*/}
@@ -315,7 +344,9 @@ export default function Create() {
         <div className="create__submission">
           {subjects.length > 0 ? (
             // If subjects have been provided, enable event creation
-            <button className="create__event_button">Create Event</button>
+            <button className="create__event_button" onClick={submitEvent}>
+              {loading ? <Loader /> : "Create Event"}
+            </button>
           ) : (
             // Else, prompt to add subject via disabled state
             <button className="create__event_disabled" disabled>
@@ -537,7 +568,8 @@ export default function Create() {
           opacity: 1 !important;
         }
 
-        .create__subject_form > button:hover {
+        .create__subject_form > button:hover,
+        .create__event_button:hover {
           opacity: 0.8;
         }
 
