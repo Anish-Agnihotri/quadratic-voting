@@ -1,7 +1,4 @@
-const { PrismaClient } = require("@prisma/client"); // Import prisma client
-
-// Setup prisma client
-const prisma = new PrismaClient();
+import prisma from "db"; // Import prisma
 
 // --> /api/events/details
 export default async (req, res) => {
@@ -26,7 +23,7 @@ export default async (req, res) => {
   delete event.secret_key;
 
   // Collect voting stastistics
-  const statistics = generateStasistics(
+  const statistics = generateStatistics(
     // Number of voteable subjects
     JSON.parse(event.event_data).length,
     // Number of max voters
@@ -47,7 +44,11 @@ export default async (req, res) => {
   event.event_data = JSON.parse(event.event_data);
 
   // Generate chart data for chartJS
-  const chart = generateChart(event.event_data, statistics.qv);
+  const chart = generateChart(
+    event.event_data,
+    statistics.linear,
+    statistics.qv
+  );
 
   // Return event data, computed statistics, and chart
   res.send({
@@ -65,7 +66,7 @@ export default async (req, res) => {
  * @param {voter[]} voters array of voter preferences
  * @return {object} containing QV statistics and calculated weights
  */
-function generateStasistics(subjects, num_voters, credits_per_voter, voters) {
+function generateStatistics(subjects, num_voters, credits_per_voter, voters) {
   let numberVoters = 0, // Placeholder for number of participating voters
     numberVotes = 0, // Placeholder for number of placed votes
     qvRaw = new Array(subjects).fill([]); // Empty raw array to hold individual votes
@@ -93,6 +94,9 @@ function generateStasistics(subjects, num_voters, credits_per_voter, voters) {
     }
   }
 
+  // Calculate linear weights from raw votes
+  const linear = calculateLinear(qvRaw);
+
   // Calculate QV weights from raw votes
   const qv = calculateQV(qvRaw);
 
@@ -105,8 +109,42 @@ function generateStasistics(subjects, num_voters, credits_per_voter, voters) {
     numberVotes,
     voterParticiptation: (voters.length / numberVoters) * 100,
     qvRaw,
+    linear,
     qv,
   };
+}
+
+/**
+ * Calculates and returnes subject weights based on linear addition
+ * @param {integer[][]} qvRaw
+ * @returns {integer[]} containing linear weights
+ */
+function calculateLinear(qvRaw) {
+  let mapped = [],
+    sumWeights = 0;
+
+  // For indidividual subjects in qvRaw
+  for (const subjectVotes of qvRaw) {
+    // Calculate sum of votes
+    const subjectSum = subjectVotes.reduce((a, b) => a + b, 0);
+
+    // Add sum of votes to sumWeights
+    sumWeights += subjectSum;
+
+    // Push linear sum to mapped
+    mapped.push(subjectSum);
+  }
+
+  let weights = []; // Final weights array
+
+  // For each sum vote in mapped
+  for (const sumVotes of mapped) {
+    // Divide by total summed # of votes to calculate weight
+    weights.push(sumVotes / sumWeights);
+  }
+
+  // Return linear weights
+  return weights;
 }
 
 /**
@@ -153,19 +191,23 @@ function calculateQV(qvRaw) {
 
 /**
  * Returns chartJS chart data
- * @param {subjects[]} subjects qv subjects
+ * @param {subjects[]} subjects voteable subjects
+ * @param {integer[]} linearWeights linear subject weights
  * @param {integer[]} weights qv subject weights
  */
-function generateChart(subjects, weights) {
-  let labels = []; // Placeholder labels
-  let data = []; // Placeholder series weight array
+function generateChart(subjects, linearWeights, weights) {
+  let labels = [], // Placeholder labels
+    linearData = [], // Placeholder series linear weight array
+    data = []; // Placeholder series weight array
 
   // For each subject
   for (let i = 0; i < subjects.length; i++) {
     // Collect title for xaxis
     labels.push(subjects[i].title);
+    // Collect linear weight for series
+    linearData.push((linearWeights[i] * 100).toFixed(2));
     // Collect weight for series
-    data.push(weights[i] * 100);
+    data.push((weights[i] * 100).toFixed(2));
   }
 
   // Return data in chartJS format
@@ -173,9 +215,14 @@ function generateChart(subjects, weights) {
     labels,
     datasets: [
       {
-        backgroundColor: "rgba(15, 8, 87, 1)",
-        label: "Vote Percentage",
+        backgroundColor: "rgba(0, 209, 130, 1)",
+        label: "Quadratic Vote %",
         data,
+      },
+      {
+        backgroundColor: "rgba(15, 8, 87, 1)",
+        label: "Linear Vote %",
+        data: linearData,
       },
     ],
   };

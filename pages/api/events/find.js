@@ -1,7 +1,4 @@
-const { PrismaClient } = require("@prisma/client"); // Import prisma client
-
-// Setup prisma client
-const prisma = new PrismaClient();
+import prisma from "db"; // Import prisma
 
 // --> /api/events/find
 export default async (req, res) => {

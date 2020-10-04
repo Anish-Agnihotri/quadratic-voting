@@ -1,30 +1,69 @@
+import useSWR from "swr"; // State-while-revalidate
+import fetch from "unfetch"; // Fetch for requests
+import moment from "moment"; // Moment date parsing
 import Layout from "components/layout"; // Layout wrapper
 import Navigation from "components/navigation"; // Navigation
-import useSWR from "swr";
-import fetch from "unfetch";
-import moment from "moment";
-import { HorizontalBar } from "react-chartjs-2";
+import { HorizontalBar } from "react-chartjs-2"; // Horizontal bar graph
+import HashLoader from "react-spinners/HashLoader"; // Loader
 
+// Setup fetcher for SWR
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 function Event({ query }) {
+  // Collect data from endpoint
   const { data, loading } = useSWR(
-    `/api/events/details?id=${query.id}`,
+    // Use query ID in URL
+    `/api/events/details?id=${query.id}${
+      // If secret is present, use administrator view
+      query.secret !== "" ? `&secret_key=${query.secret}` : ""
+    }`,
     fetcher
   );
+
+  /**
+   * Admin view: download voter URLs as text file
+   */
+  const downloadTXT = () => {
+    // Collect voter URLs in single text string
+    const text = data.event.voters
+      .map((voter, _) => `http://localhost:3000/vote?user=${voter.id}`)
+      .join("\n");
+
+    // Create link component
+    const element = document.createElement("a");
+    // Create blob from text
+    const file = new Blob([text], { type: "text/plain" });
+
+    // Setup link component to be downloadable and hidden
+    element.href = URL.createObjectURL(file);
+    element.download = "voter_links.txt";
+    element.style.display = "none";
+
+    // Append link component to body
+    document.body.appendChild(element);
+
+    // Click link component to download file
+    element.click();
+
+    // Remove link component from body
+    document.body.removeChild(element);
+  };
 
   return (
     <Layout>
       {/* Navigation header */}
       <Navigation
         history={{
+          // If secret is not present, return to home
           title:
             query.secret && query.secret !== "" ? "event creation" : "home",
+          // If secret is present, return to create page
           link: query.secret && query.secret !== "" ? `/create` : "/",
         }}
         title="Event Details"
       />
 
+      {/* Event page summary */}
       <div className="event">
         <h1>Event Details</h1>
         <p>Event statistics dashboard.</p>
@@ -34,11 +73,51 @@ function Event({ query }) {
           <label>Event URL</label>
           <p>Statistics dashboard URL</p>
           <input
-            className="copyable__input"
-            value={`https://localhost:3000/event?id=${query.id}`}
+            value={`http://localhost:3000/event?id=${query.id}`}
             readOnly
           />
         </div>
+
+        {/* Event private URL */}
+        {query.id !== "" &&
+        query.secret !== "" &&
+        query.secret !== undefined &&
+        !loading &&
+        data ? (
+          <div className="event__section">
+            <label className="private__label">Private Admin URL</label>
+            <p>Save this URL to manage event and make changes</p>
+            <input
+              value={`http://localhost:3000/event?id=${query.id}&secret=${query.secret}`}
+              readOnly
+            />
+          </div>
+        ) : null}
+
+        {/* Event copyable links */}
+        {query.id !== "" &&
+        query.secret !== "" &&
+        query.secret !== undefined &&
+        !loading &&
+        data ? (
+          <div className="event__section">
+            <label className="private__label">Individual voting links</label>
+            <p>For private sharing with voters</p>
+            <textarea
+              className="event__section_textarea"
+              // Collect voter urls as one text element
+              value={data.event.voters
+                .map(
+                  (voter, _) => `http://localhost:3000/vote?user=${voter.id}`
+                )
+                .join("\n")}
+              readOnly
+            />
+            <button onClick={downloadTXT} className="download__button">
+              Download as TXT
+            </button>
+          </div>
+        ) : null}
 
         {/* Event public URL */}
         <div className="event__section">
@@ -50,19 +129,27 @@ function Event({ query }) {
             </div>
           ) : (
             <div className="loading__chart">
+              <HashLoader
+                size={50}
+                color="#0f0857"
+                css={{ display: "inline-block" }}
+              />
               <h3>Loading Chart...</h3>
               <span>Please give us a moment</span>
             </div>
           )}
         </div>
 
+        {/* Event Publis statistics */}
         <div className="event__section">
           <label>Event Statistics</label>
           <div className="event__sub_section">
             <label>Event Started</label>
             <h3>
               {!loading && data
-                ? moment(data.event.start_event_data).fromNow()
+                ? moment(data.event.start_event_data).format(
+                    "MMMM Do YYYY, h:mm:ss a"
+                  )
                 : "Loading..."}
             </h3>
           </div>
@@ -70,7 +157,9 @@ function Event({ query }) {
             <label>Event Finished</label>
             <h3>
               {!loading && data
-                ? moment(data.event.end_event_data).fromNow()
+                ? moment(data.event.end_event_data).format(
+                    "MMMM Do YYYY, h:mm:ss a"
+                  )
                 : "Loading..."}
             </h3>
           </div>
@@ -93,6 +182,7 @@ function Event({ query }) {
         </div>
       </div>
 
+      {/* Scoped styles */}
       <style jsx>{`
         .event {
           max-width: 700px;
@@ -148,6 +238,17 @@ function Event({ query }) {
           padding: 8px 5px;
         }
 
+        .event__section_textarea {
+          width: calc(100% - 22px);
+          margin-top: 15px;
+          height: 120px;
+          padding: 10px;
+          border-radius: 5px;
+          border: 1px solid #e7eaf3;
+          font-family: "Roboto", sans-serif;
+          font-size: 14px;
+        }
+
         .event__sub_section {
           width: calc(50% - 52px);
           display: inline-block;
@@ -170,6 +271,40 @@ function Event({ query }) {
           border-radius: 5px;
         }
 
+        .loading__chart {
+          text-align: center;
+          padding: 50px 0px 30px 0px;
+        }
+
+        .loading__chart > h3 {
+          color: #0f0857;
+          font-size: 22px;
+          margin-block-start: 10px;
+          margin-block-end: 0px;
+        }
+
+        .private__label {
+          color: #cc0000 !important;
+        }
+
+        .download__button {
+          padding: 12px 0px;
+          width: 100%;
+          display: inline-block;
+          border-radius: 5px;
+          background-color: #0f0857;
+          color: #fff;
+          font-size: 18px;
+          transition: 100ms ease-in-out;
+          border: none;
+          cursor: pointer;
+          margin-top: 15px;
+        }
+
+        .download__button:hover {
+          opacity: 0.8;
+        }
+
         @media screen and (max-width: 700px) {
           .event__sub_section {
             width: calc(100% - 52px);
@@ -180,7 +315,9 @@ function Event({ query }) {
   );
 }
 
+// On initial page load:
 Event.getInitialProps = ({ query }) => {
+  // Return URL params
   return { query };
 };
 

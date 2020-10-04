@@ -1,12 +1,11 @@
-// TODO: cleanup + comments
-import Layout from "components/layout";
-import Navigation from "components/navigation";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import fetch from "unfetch";
-import useSWR from "swr";
-import axios from "axios";
-import Loader from "components/loader";
+import useSWR from "swr"; // State-while-revalidate
+import axios from "axios"; // Axios for requests
+import fetch from "unfetch"; // Fetch for requests
+import Loader from "components/loader"; // Preloader
+import Layout from "components/layout"; // Layout Wrapper
+import { useRouter } from "next/router"; // Route management
+import { useState, useEffect } from "react"; // State hooks
+import Navigation from "components/navigation"; // Navigation component
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 

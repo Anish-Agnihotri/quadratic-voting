@@ -1,6 +1,6 @@
-import Layout from "components/layout";
-import Navigation from "components/navigation";
-import Link from "next/link";
+import Link from "next/link"; // Dynamic links
+import Layout from "components/layout"; // Layout wrapper
+import Navigation from "components/navigation"; // Navigation component
 
 function Success({ query }) {
   return (
@@ -14,17 +14,23 @@ function Success({ query }) {
         title="Vote Success"
       />
 
+      {/* Success dialog */}
       <div className="success">
         <h1>Your vote is in!</h1>
         <p>You have successfully placed your votes.</p>
+
+        {/* Go back to voting */}
         <Link href={`/vote?user=${query.user}`}>
           <a>Change your votes</a>
         </Link>
+
+        {/* Redirect to event dashboard */}
         <Link href={`/event?id=${query.event}`}>
           <a>See event dashboard</a>
         </Link>
       </div>
 
+      {/* Scoped styling */}
       <style jsx>{`
         .success {
           max-width: 700px;
@@ -77,7 +83,9 @@ function Success({ query }) {
   );
 }
 
+// On initial page load:
 Success.getInitialProps = ({ query }) => {
+  // Collect url params
   return { query };
 };
 
