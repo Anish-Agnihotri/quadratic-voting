@@ -45,10 +45,16 @@ function Vote({ query }) {
   const submitVotes = async () => {
     setLoading(true);
 
-    await axios.post("/api/events/vote", {
+    const { status } = await axios.post("/api/events/vote", {
       id: user,
       votes: subjects.map((subject) => subject.votes),
     });
+
+    if (status === 200) {
+      router.push(`success?event=${data.event_id}&user=${user}`);
+    } else {
+      router.push(`failure?event=${data.event_id}&user=${user}`);
+    }
 
     setLoading(false);
   };
@@ -91,7 +97,12 @@ function Vote({ query }) {
                 <label htmlFor="remaining_credits">
                   Remaining vote credits
                 </label>
-                <input type="number" id="remaining_credits" value={votes} />
+                <input
+                  type="number"
+                  id="remaining_credits"
+                  value={votes}
+                  readOnly
+                />
               </div>
 
               <div className="voteable__subjects">
@@ -119,7 +130,7 @@ function Vote({ query }) {
                       <div>
                         <br />
                         <label>Your votes</label>
-                        <input value={subject.votes} />
+                        <input value={subject.votes} readOnly />
                         <button onClick={() => increaseVote(i, false)}>
                           -
                         </button>

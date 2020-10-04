@@ -13,6 +13,7 @@ export default async (req, res) => {
   if (id) {
     const response = {
       exists: false,
+      event_id: "",
       vote_data: "",
       credits_per_voter: 0,
     }; // Setup response object
@@ -29,6 +30,8 @@ export default async (req, res) => {
     if (user) {
       // Toggle response object exist field
       response.exists = true;
+      // Set response event_id field to value retrived from DB
+      response.event_id = user.event_uuid;
       // Set response object vote_data field to value retrieved from DB
       response.vote_data = user.vote_data;
 
