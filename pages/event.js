@@ -1,7 +1,18 @@
 import Layout from "components/layout"; // Layout wrapper
 import Navigation from "components/navigation"; // Navigation
+import useSWR from "swr";
+import fetch from "unfetch";
+import moment from "moment";
+import { HorizontalBar } from "react-chartjs-2";
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
 function Event({ query }) {
+  const { data, loading } = useSWR(
+    `/api/events/details?id=${query.id}`,
+    fetcher
+  );
+
   return (
     <Layout>
       {/* Navigation header */}
@@ -16,7 +27,7 @@ function Event({ query }) {
 
       <div className="event">
         <h1>Event Details</h1>
-        <p>Real-time event statistics dashboard.</p>
+        <p>Event statistics dashboard.</p>
 
         {/* Event public URL */}
         <div className="event__section">
@@ -28,12 +39,64 @@ function Event({ query }) {
             readOnly
           />
         </div>
+
+        {/* Event public URL */}
+        <div className="event__section">
+          <label>Event Votes</label>
+          <p>Quadratic Voting-weighted voting results</p>
+          {!loading && data ? (
+            <div className="chart">
+              <HorizontalBar data={data.chart} width={90} height={60} />
+            </div>
+          ) : (
+            <div className="loading__chart">
+              <h3>Loading Chart...</h3>
+              <span>Please give us a moment</span>
+            </div>
+          )}
+        </div>
+
+        <div className="event__section">
+          <label>Event Statistics</label>
+          <div className="event__sub_section">
+            <label>Event Started</label>
+            <h3>
+              {!loading && data
+                ? moment(data.event.start_event_data).fromNow()
+                : "Loading..."}
+            </h3>
+          </div>
+          <div className="event__sub_section">
+            <label>Event Finished</label>
+            <h3>
+              {!loading && data
+                ? moment(data.event.end_event_data).fromNow()
+                : "Loading..."}
+            </h3>
+          </div>
+          <div className="event__sub_section">
+            <label>Voting Participants</label>
+            <h3>
+              {!loading && data
+                ? `${data.statistics.numberVoters.toLocaleString()} / ${data.statistics.numberVotersTotal.toLocaleString()}`
+                : "Loading..."}
+            </h3>
+          </div>
+          <div className="event__sub_section">
+            <label>Votes Placed</label>
+            <h3>
+              {!loading && data
+                ? `${data.statistics.numberVotes.toLocaleString()} / ${data.statistics.numberVotesTotal.toLocaleString()}`
+                : "Loading..."}
+            </h3>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
         .event {
           max-width: 700px;
-          padding: 40px 20px 0px 20px;
+          padding: 40px 20px 75px 20px;
           margin: 0px auto;
         }
 
@@ -62,7 +125,8 @@ function Event({ query }) {
           text-align: left;
         }
 
-        .event__section > label {
+        .event__section > label,
+        .event__sub_section > label {
           display: block;
           color: #587299;
           font-weight: bold;
@@ -82,6 +146,34 @@ function Event({ query }) {
           border: 1px solid #e7eaf3;
           margin-top: 15px;
           padding: 8px 5px;
+        }
+
+        .event__sub_section {
+          width: calc(50% - 52px);
+          display: inline-block;
+          margin: 10px;
+          padding: 15px;
+          border: 1px solid #e7eaf3;
+          border-radius: 5px;
+          vertical-align: top;
+        }
+
+        .event__sub_section > h3 {
+          margin: 0px;
+        }
+
+        .chart {
+          margin-top: 20px;
+          width: calc(100% - 20px);
+          padding: 10px;
+          border: 1px solid #e7eaf3;
+          border-radius: 5px;
+        }
+
+        @media screen and (max-width: 700px) {
+          .event__sub_section {
+            width: calc(100% - 52px);
+          }
         }
       `}</style>
     </Layout>

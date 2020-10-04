@@ -16,6 +16,7 @@ function Vote({ query }) {
   const [noUser, setNoUser] = useState("");
   const { data, error } = useSWR(`/api/events/find?id=${user}`, fetcher);
   const [votes, setVotes] = useState(0);
+  const [sumVotes, setSumVotes] = useState(0);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -33,11 +34,13 @@ function Vote({ query }) {
       oldSubjects[i].votes--;
     }
 
+    const currentVoteCount = oldSubjects
+      .map((subject) => subject.votes)
+      .reduce((prev, curr) => prev + curr, 0);
+    setSumVotes(currentVoteCount);
+
     setVotes(
-      data.credits_per_voter -
-        oldSubjects
-          .map((subject) => subject.votes)
-          .reduce((prev, curr) => prev + curr, 0)
+      data.credits_per_voter - (currentVoteCount < 0 ? 0 : currentVoteCount)
     );
     setSubjects(oldSubjects);
   };
@@ -62,11 +65,12 @@ function Vote({ query }) {
   useEffect(() => {
     if (data) {
       setSubjects(data.vote_data);
+      const currentVoteCount = data.vote_data
+        .map((subject) => subject.votes)
+        .reduce((prev, curr) => prev + curr, 0);
+      setSumVotes(currentVoteCount);
       setVotes(
-        data.credits_per_voter -
-          data.vote_data
-            .map((subject) => subject.votes)
-            .reduce((prev, curr) => prev + curr, 0)
+        data.credits_per_voter - (currentVoteCount < 0 ? 0 : currentVoteCount)
       );
     }
   }, [data]);
@@ -131,9 +135,17 @@ function Vote({ query }) {
                         <br />
                         <label>Your votes</label>
                         <input value={subject.votes} readOnly />
-                        <button onClick={() => increaseVote(i, false)}>
-                          -
-                        </button>
+                        {(sumVotes === data.credits_per_voter &&
+                          subject.votes === 0) ||
+                        subject.votes === 0 ? (
+                          <button className="disabled__vote_button" disabled>
+                            -
+                          </button>
+                        ) : (
+                          <button onClick={() => increaseVote(i, false)}>
+                            -
+                          </button>
+                        )}
                         {votes === 0 ? (
                           <button className="disabled__vote_button" disabled>
                             +
