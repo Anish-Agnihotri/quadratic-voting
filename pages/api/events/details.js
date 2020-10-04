@@ -18,7 +18,8 @@ export default async (req, res) => {
   });
 
   // Check for administrator access based on passed secret_key
-  const isAdmin = event.secret_key === secret_key ? true : false;
+  const isAdmin =
+    event.secret_key && event.secret_key === secret_key ? true : false;
   // After checking for administrator access, delete secret_key from event object
   delete event.secret_key;
 
