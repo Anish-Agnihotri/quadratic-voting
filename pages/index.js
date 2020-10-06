@@ -8,14 +8,16 @@ export default function Home() {
       <div className="home">
         {/* Home heading */}
         <div className="home__content">
-          <h1>Quadratic Voting</h1>
-          <h2>Real-time dashboard</h2>
+          <h1>QuadraticVote.co</h1>
+          <h2>An easy tool to host a quadratic vote.</h2>
           <p>
             Quadratic Voting is the mathematically optimal way to vote in a
             democratic community. Vote through collective decision-making, by
             allocating votes that express the <i>degree</i> of your preferences,
             not just <i>direction</i>.
           </p>
+          <h2>Host a Quadratic Voting Event Below!</h2>
+          <h3>It's Easy...</h3>
         </div>
 
         {/* Home buttons */}
@@ -55,6 +57,18 @@ export default function Home() {
           .home__content > h2 {
             color: #00d182;
             margin-block-start: 0px;
+          }
+
+          .home__content > h2:nth-of-type(2) {
+            margin-block-end: 0px;
+            margin-block-start: 50px;
+          }
+
+          .home__content > h3 {
+            font-size: 20px;
+            margin-block-start: 0px;
+            margin-block-end: 0px;
+            color: #0f0857;
           }
 
           .home__content > p {

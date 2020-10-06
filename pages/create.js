@@ -17,7 +17,7 @@ import Navigation from "components/navigation"; // Navigation bar
 // Initial global settings
 const defaultGlobalSettings = {
   num_voters: 10,
-  credits_per_voter: 5,
+  credits_per_voter: 100,
   event_start_date: moment(),
   event_end_date: moment().add(1, "days"),
 };
@@ -157,8 +157,8 @@ export default function Create() {
           <h1>Create a new event</h1>
           <p>
             To create an event, simply fill out the event settings, add your
-            voteable subjects, and we will generate you quicklinks that you can
-            share with your audience.
+            options, and we will generate you quicklinks that you can share with
+            your audience.
           </p>
         </div>
 
@@ -226,15 +226,15 @@ export default function Create() {
         {/* Subject settings */}
         <div className="create__settings">
           {/* Subject settings heading */}
-          <h2>Voteable Subjects</h2>
+          <h2>Options</h2>
           <p>
-            These settings enable you to add subjects that voters can delegate
-            their voting credits to. You can choose to add a subject title,
+            These settings enable you to add options that voters can delegate
+            their voting credits to. You can choose to add an option title,
             description, and link.
           </p>
 
           {/* Listing of all subjects via accordion*/}
-          <h3>Subjects</h3>
+          <h3>Options</h3>
           <div className="create__settings_section">
             {subjects.length > 0 ? (
               // If subjects array contains at least one subject
@@ -252,7 +252,7 @@ export default function Create() {
                         {subject.description !== "" ? (
                           // If subject has a description
                           <div className="accordion__value">
-                            <label>Subject Description</label>
+                            <label>Description</label>
                             <textarea value={subject.description} disabled />
                           </div>
                         ) : null}
@@ -271,10 +271,10 @@ export default function Create() {
                         ) : null}
                         <div className="accordion__buttons">
                           <button onClick={() => editSubject(i)}>
-                            Edit Subject
+                            Edit Option
                           </button>
                           <button onClick={() => deleteSubject(i)}>
-                            Delete Subject
+                            Delete Option
                           </button>
                         </div>
                       </AccordionItemPanel>
@@ -284,18 +284,18 @@ export default function Create() {
               </Accordion>
             ) : (
               // Else, if no subjects in subjects array
-              <span className="empty__subjects">No subjects added</span>
+              <span className="empty__subjects">No options added</span>
             )}
           </div>
 
           {/* Form to add subjects */}
-          <h3>Add Subjects</h3>
+          <h3>Add Options</h3>
           <div className="create__settings_section">
             {/* Subject addition form */}
             <div className="create__subject_form">
               {/* Add subject tile */}
               <div>
-                <label>Subject Title</label>
+                <label>Option Title</label>
                 <input
                   type="text"
                   placeholder="Vote #1"
@@ -306,9 +306,9 @@ export default function Create() {
 
               {/* Add subject description */}
               <div>
-                <label>Subject Description</label>
+                <label>Option Description</label>
                 <textarea
-                  placeholder="Description of the subject."
+                  placeholder="Description of the option."
                   value={currentSubject.description}
                   onChange={(e) =>
                     setSubjectData("description", e.target.value)
@@ -318,7 +318,7 @@ export default function Create() {
 
               {/* Add subject link */}
               <div>
-                <label>Subject Link</label>
+                <label>Option Link</label>
                 <input
                   type="text"
                   placeholder="www.council.org/vote_info/1"
@@ -342,7 +342,7 @@ export default function Create() {
 
         {/* Submit event creation */}
         <div className="create__submission">
-          {subjects.length > 0 ? (
+          {subjects.length > 1 ? (
             // If subjects have been provided, enable event creation
             <button className="create__event_button" onClick={submitEvent}>
               {loading ? <Loader /> : "Create Event"}
@@ -350,7 +350,7 @@ export default function Create() {
           ) : (
             // Else, prompt to add subject via disabled state
             <button className="create__event_disabled" disabled>
-              Add at least one subject
+              Add at least two options
             </button>
           )}
         </div>
