@@ -79,7 +79,7 @@ function generateStatistics(subjects, num_voters, credits_per_voter, voters) {
 
     // Sum voter preferences to check if user has placed at least 1 vote
     const sumVotes = voter_data
-      .map((subject) => subject.votes)
+      .map((subject) => Math.pow(subject.votes, 2))
       .reduce((prev, curr) => prev + curr, 0);
 
     // If user has placed a vote:
@@ -127,7 +127,8 @@ function calculateLinear(qvRaw) {
   // For indidividual subjects in qvRaw
   for (const subjectVotes of qvRaw) {
     // Calculate sum of votes
-    const subjectSum = subjectVotes.reduce((a, b) => a + b, 0);
+    const numCredits = subjectVotes.map((item, _) => Math.pow(item, 2));
+    const subjectSum = numCredits.reduce((a, b) => a + b, 0);
 
     // Add sum of votes to sumWeights
     sumWeights += subjectSum;
@@ -154,40 +155,15 @@ function calculateLinear(qvRaw) {
  * @returns {integer[]} containing QV weights
  */
 function calculateQV(qvRaw) {
-  let mapped = [],
-    sumWeight = 0;
+  let mapped = [];
 
-  // *** Quadratic Voting Calculation ***
   // For individual subjects in qvRaw
   for (const subjectVotes of qvRaw) {
-    let summedVotes = 0; // Summed weight
-
-    // For individual votes for each subject
-    for (const individualVotes of subjectVotes) {
-      // Calculate vote sqrt
-      summedVotes += Math.sqrt(individualVotes);
-    }
-
-    // Square summed weight
-    summedVotes *= summedVotes;
-
-    // Add per-subject weights to sumWeight
-    sumWeight += summedVotes;
-
     // Push subject weights to mapped array
-    mapped.push(summedVotes);
+    mapped.push(subjectVotes.reduce((a, b) => a + b, 0));
   }
 
-  let weights = []; // Final weights array
-
-  // For each culmulative QV weight
-  for (const calculatedVotes of mapped) {
-    // Calculate individual weight (out of 100%) by dividing by sumWeight
-    weights.push(calculatedVotes / sumWeight);
-  }
-
-  // Return per-subject array of QV weights
-  return weights;
+  return mapped;
 }
 
 /**
@@ -208,7 +184,7 @@ function generateChart(subjects, linearWeights, weights) {
     // Collect linear weight for series
     linearData.push((linearWeights[i] * 100).toFixed(2));
     // Collect weight for series
-    data.push((weights[i] * 100).toFixed(2));
+    data.push(weights[i]);
   }
 
   // Return data in chartJS format
@@ -217,12 +193,12 @@ function generateChart(subjects, linearWeights, weights) {
     datasets: [
       {
         backgroundColor: "rgba(0, 209, 130, 1)",
-        label: "Quadratic Vote %",
+        label: "Quadratic Votes",
         data,
       },
       {
         backgroundColor: "rgba(15, 8, 87, 1)",
-        label: "Linear Vote %",
+        label: "% Credits",
         data: linearData,
       },
     ],
