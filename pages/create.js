@@ -16,6 +16,8 @@ import Navigation from "components/navigation"; // Navigation bar
 
 // Initial global settings
 const defaultGlobalSettings = {
+  event_title: "My Event Title",
+  event_description: "My Event Description",
   num_voters: 10,
   credits_per_voter: 100,
   event_start_date: moment(),
@@ -68,7 +70,7 @@ export default function Create() {
    * @param {string} type name of object date key
    * @param {object} value moment date object
    */
-  const setEventDate = (type, value) => {
+  const setEventData = (type, value) => {
     setGlobalSettings({
       ...globalSettings,
       [type]: value,
@@ -134,9 +136,11 @@ export default function Create() {
     setLoading(false);
 
     // Redirect to events page on submission
-    router.push(
-      `/event?id=${eventDetails.data.id}&secret=${eventDetails.data.secret_key}`
-    );
+    router
+      .push(
+        `/event?id=${eventDetails.data.id}&secret=${eventDetails.data.secret_key}`
+      )
+      .then(() => window.scrollTo(0, 0));
   };
 
   return (
@@ -167,11 +171,37 @@ export default function Create() {
           {/* Global settings header */}
           <h2>Global Settings</h2>
           <p>
-            These settings are used to generate your audience's individual
-            participation links. You can select the number of voters, how many
-            vote credits they'll each receive, and a start and end date for
-            voting.
+            These settings are used to setup your event. You can add an event
+            title and description, select the number of voters, how many vote
+            credits they'll each receive, and a start and end date for voting.
           </p>
+
+          {/* Event title selection */}
+          <div className="create__settings_section">
+            <label htmlFor="event_title">Event title</label>
+            <p>What is your event called?</p>
+            <input
+              type="text"
+              id="event_title"
+              value={globalSettings.event_title}
+              onChange={(e) => setEventData("event_title", e.target.value)}
+            />
+          </div>
+
+          {/* Event description selection */}
+          <div className="create__settings_section">
+            <label htmlFor="event_description">Event description</label>
+            <p>Describe your event in under 240 characters:</p>
+            <input
+              type="text"
+              id="event_description"
+              value={globalSettings.event_description}
+              maxLength="240"
+              onChange={(e) =>
+                setEventData("event_description", e.target.value)
+              }
+            />
+          </div>
 
           {/* Number of voters selection */}
           <div className="create__settings_section">
@@ -207,18 +237,18 @@ export default function Create() {
             <Datetime
               className="create__settings_datetime"
               value={globalSettings.event_start_date}
-              onChange={(value) => setEventDate("event_start_date", value)}
+              onChange={(value) => setEventData("event_start_date", value)}
             />
           </div>
 
           {/* Event end date selection */}
           <div className="create__settings_section">
             <label>Event end date</label>
-            <p>When would you like polling to close?</p>
+            <p>When would you like to end polling?</p>
             <Datetime
               className="create__settings_datetime"
               value={globalSettings.event_end_date}
-              onChange={(value) => setEventDate("event_end_date", value)}
+              onChange={(value) => setEventData("event_end_date", value)}
             />
           </div>
         </div>
@@ -298,7 +328,7 @@ export default function Create() {
                 <label>Option Title</label>
                 <input
                   type="text"
-                  placeholder="Vote #1"
+                  placeholder="My Option Title"
                   value={currentSubject.title}
                   onChange={(e) => setSubjectData("title", e.target.value)}
                 />

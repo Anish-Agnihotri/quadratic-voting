@@ -23,7 +23,10 @@ export default async (req, res) => {
     // Using individual, secret vote ID passed from request body
     where: { id: vote.id },
     // With updated votes from request body + preexisting vote_data from DB
-    data: { vote_data: vote_data },
+    data: {
+      voter_name: vote.name !== "" ? vote.name : "",
+      vote_data: vote_data,
+    },
   });
 
   // Upon success, respond with 200

@@ -4172,6 +4172,13 @@ react-chartjs-2@^2.10.0:
     lodash "^4.17.19"
     prop-types "^15.7.2"
 
+react-countdown@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-countdown/-/react-countdown-2.2.2.tgz#c783fc3cad1699ac08e018c6da10da7cb6641f46"
+  integrity sha512-L/6mxoLBpGZY/97V883n9ZcDdkAxKjC1D9LQC73IVplwKw7U4UHkia8KvXp0vOPXnBf4gt5tgU5lGFeBcutWlQ==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-datetime@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-datetime/-/react-datetime-3.0.4.tgz#176159d08d35c9e750f0be2f0b974e4f9532ffa5"

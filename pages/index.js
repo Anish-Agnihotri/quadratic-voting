@@ -17,7 +17,6 @@ export default function Home() {
             not just <i>direction</i>.
           </p>
           <h2>Host a Quadratic Voting Event Below!</h2>
-          <h3>It's Easy...</h3>
         </div>
 
         {/* Home buttons */}
@@ -34,7 +33,7 @@ export default function Home() {
             <img src="/vectors/place_vote.svg" alt="Place vote" />
             <h2>Place your vote</h2>
             <p>Use your secret code to place votes.</p>
-            <Link href="/vote">
+            <Link href="/place">
               <a>Place Votes</a>
             </Link>
           </div>
@@ -60,15 +59,9 @@ export default function Home() {
           }
 
           .home__content > h2:nth-of-type(2) {
-            margin-block-end: 0px;
-            margin-block-start: 50px;
-          }
-
-          .home__content > h3 {
-            font-size: 20px;
-            margin-block-start: 0px;
-            margin-block-end: 0px;
             color: #0f0857;
+            margin-block-end: 0px;
+            margin-block-start: 60px;
           }
 
           .home__content > p {
@@ -119,7 +112,7 @@ export default function Home() {
             background-color: #0f0857;
             color: #fff;
             font-size: 18px;
-            transition: 100ms ease-in-out;
+            transition: 50ms ease-in-out;
           }
 
           .home__cta_button > a:hover {

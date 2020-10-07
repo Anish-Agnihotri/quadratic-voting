@@ -1,4 +1,6 @@
+// FIXME: Fix end date parsing
 import prisma from "db"; // Import prisma
+import moment from "moment"; // Time formatting
 
 // --> /api/events/create
 export default async (req, res) => {
@@ -23,10 +25,12 @@ export default async (req, res) => {
   // Create new event
   const createdEvent = await prisma.events.create({
     data: {
+      event_title: event.event_title,
+      event_description: event.event_description,
       num_voters: event.num_voters,
       credits_per_voter: event.credits_per_voter,
-      start_event_date: event.start_event_date,
-      end_event_date: event.end_event_date,
+      start_event_date: formatAsPGTimestamp(event.start_event_date),
+      end_event_date: formatAsPGTimestamp(event.end_event_date),
       // Stringify voteable subject data
       event_data: JSON.stringify(event.subjects),
       // Create voters from filled array
@@ -41,3 +45,12 @@ export default async (req, res) => {
   // Send back created event
   res.send(createdEvent);
 };
+
+/**
+ * Converts moment date to Postgres-compatible DATETIME
+ * @param {object} date Moment object
+ * @returns {string} containing DATETIME
+ */
+function formatAsPGTimestamp(date) {
+  return moment(date).toDate();
+}

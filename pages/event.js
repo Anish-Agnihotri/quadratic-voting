@@ -73,7 +73,12 @@ function Event({ query }) {
       {/* Event page summary */}
       <div className="event">
         <h1>Event Details</h1>
-        <p>Event statistics dashboard.</p>
+        <div className="event__information">
+          <h2>{!loading && data ? data.event.event_title : "Loading..."}</h2>
+          <p>
+            {!loading && data ? data.event.event_description : "Loading..."}
+          </p>
+        </div>
 
         {/* Event public URL */}
         <div className="event__section">
@@ -180,7 +185,7 @@ function Event({ query }) {
             </h3>
           </div>
           <div className="event__sub_section">
-            <label>Votes Placed</label>
+            <label>Credits Used</label>
             <h3>
               {!loading && data
                 ? `${data.statistics.numberVotes.toLocaleString()} / ${data.statistics.numberVotesTotal.toLocaleString()}`
@@ -204,7 +209,20 @@ function Event({ query }) {
           margin: 0px;
         }
 
-        .event > p {
+        .event__information {
+          border: 1px solid #e7eaf3;
+          padding: 10px;
+          border-radius: 10px;
+          margin: 20px 0px;
+        }
+
+        .event__information > h2 {
+          color: #00d182;
+          font-size: 22px;
+          margin-block-end: 0px;
+        }
+
+        .event__information > p {
           font-size: 18px;
           line-height: 150%;
           color: rgb(107, 114, 128);

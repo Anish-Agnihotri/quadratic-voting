@@ -18,6 +18,7 @@
     "react": "16.13.1",
     "react-accessible-accordion": "^3.3.3",
     "react-chartjs-2": "^2.10.0",
+    "react-countdown": "^2.2.2",
     "react-datetime": "^3.0.4",
     "react-dom": "16.13.1",
     "react-spinners": "^0.9.0",

@@ -11,8 +11,9 @@ export default async (req, res) => {
     const response = {
       exists: false,
       event_id: "",
+      voter_name: "",
       vote_data: "",
-      credits_per_voter: 0,
+      event_data: {},
     }; // Setup response object
 
     // Collect voter information
@@ -29,23 +30,29 @@ export default async (req, res) => {
       response.exists = true;
       // Set response event_id field to value retrived from DB
       response.event_id = user.event_uuid;
+      // Set respons object voter_name field to value retrieved from DB
+      response.voter_name = user.voter_name;
       // Set response object vote_data field to value retrieved from DB
       response.vote_data = user.vote_data;
 
-      // Collect number of vote credits allower per voter
-      const credits_per_voter = await prisma.events.findOne({
+      // Collect misc event data
+      const event_data = await prisma.events.findOne({
         // By searching for the Event ID from table of Events
         where: {
           id: user.event_uuid,
         },
-        // And selecting the credits_per_voter field
+        // And selecting the appropriate fields
         select: {
+          event_title: true,
+          event_description: true,
+          start_event_date: true,
+          end_event_date: true,
           credits_per_voter: true,
         },
       });
 
-      // Set response object credits_per_votier field to value retrieved from DB
-      response.credits_per_voter = credits_per_voter.credits_per_voter;
+      // Set response object field to values retrieved from DB
+      response.event_data = event_data;
     }
 
     // Send edited/unedited response object

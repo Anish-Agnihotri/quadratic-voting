@@ -1,78 +1,93 @@
-import useSWR from "swr"; // State-while-revalidate
-import axios from "axios"; // Axios for requests
-import fetch from "unfetch"; // Fetch for requests
-import Loader from "components/loader"; // Preloader
-import Layout from "components/layout"; // Layout Wrapper
-import { useRouter } from "next/router"; // Route management
-import { useState, useEffect } from "react"; // State hooks
-import Navigation from "components/navigation"; // Navigation component
-
-const fetcher = (url) => fetch(url).then((r) => r.json());
+import axios from "axios";
+import { useRouter } from "next/router";
+import Layout from "components/layout";
+import Navigation from "components/navigation";
+import { useState, useEffect } from "react";
+import Loader from "components/loader";
 
 function Vote({ query }) {
   const router = useRouter();
-  const [user, setUser] = useState(query.user ? query.user : "");
-  const [noUser, setNoUser] = useState("");
-  const { data, error } = useSWR(`/api/events/find?id=${user}`, fetcher);
-  const [votes, setVotes] = useState(0);
-  const [sumVotes, setSumVotes] = useState(0);
-  const [subjects, setSubjects] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [name, setName] = useState("");
+  const [votes, setVotes] = useState(null);
+  const [credits, setCredits] = useState(0);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
-  const loginUser = () => {
-    router.push(`/vote?user=${noUser}`);
-    setUser(noUser);
-  };
-
-  const increaseVote = (i, increase) => {
-    const oldSubjects = subjects;
-
-    if (increase) {
-      oldSubjects[i].votes++;
-    } else {
-      oldSubjects[i].votes--;
-    }
-
-    const currentVoteCount = oldSubjects
-      .map((subject) => subject.votes)
-      .reduce((prev, curr) => prev + curr, 0);
-    setSumVotes(currentVoteCount);
-
-    setVotes(
-      data.credits_per_voter - (currentVoteCount < 0 ? 0 : currentVoteCount)
+  const calculateVotes = (rData) => {
+    const votesArr = rData.vote_data.map((item, i) => item.votes);
+    const votesArrMultiple = votesArr.map((item, i) => item * item);
+    setVotes(votesArr);
+    setCredits(
+      rData.event_data.credits_per_voter -
+        votesArrMultiple.reduce((a, b) => a + b, 0)
     );
-    setSubjects(oldSubjects);
   };
 
-  const submitVotes = async () => {
-    setLoading(true);
+  const makeVote = (index, increment) => {
+    const tempArr = votes;
+    increment
+      ? (tempArr[index] = tempArr[index] + 1)
+      : (tempArr[index] = tempArr[index] - 1);
 
-    const { status } = await axios.post("/api/events/vote", {
-      id: user,
-      votes: subjects.map((subject) => subject.votes),
-    });
-
-    if (status === 200) {
-      router.push(`success?event=${data.event_id}&user=${user}`);
-    } else {
-      router.push(`failure?event=${data.event_id}&user=${user}`);
-    }
-
-    setLoading(false);
+    setVotes(tempArr);
+    const sumVotes = tempArr
+      .map((num, _) => num * num)
+      .reduce((a, b) => a + b, 0);
+    setCredits(data.event_data.credits_per_voter - sumVotes);
   };
 
   useEffect(() => {
-    if (data) {
-      setSubjects(data.vote_data);
-      const currentVoteCount = data.vote_data
-        .map((subject) => subject.votes)
-        .reduce((prev, curr) => prev + curr, 0);
-      setSumVotes(currentVoteCount);
-      setVotes(
-        data.credits_per_voter - (currentVoteCount < 0 ? 0 : currentVoteCount)
-      );
+    axios
+      .get(`/api/events/find?id=${query.user}`)
+      .then((response) => {
+        setData(response.data);
+        setName(
+          response.data.voter_name !== null ? response.data.voter_name : ""
+        );
+        calculateVotes(response.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        console.log("error");
+        router.push("/place?error=true");
+      });
+  }, []);
+
+  const calculateShow = (current, increment) => {
+    const canOccur =
+      Math.abs(Math.pow(current, 2) - Math.pow(current + 1, 2)) <= credits;
+
+    if (current === 0 && credits === 0) {
+      return false;
     }
-  }, [data]);
+
+    // Add
+    if (increment) {
+      return current <= 0 ? true : canOccur;
+      // Subtract
+    } else {
+      return current >= 0 ? true : canOccur;
+    }
+  };
+
+  const submitVotes = async () => {
+    setSubmitLoading(true);
+
+    const { status } = await axios.post("/api/events/vote", {
+      id: query.user,
+      votes: votes,
+      name: name,
+    });
+
+    if (status === 200) {
+      router.push(`success?event=${data.event_id}&user=${query.user}`);
+    } else {
+      router.push(`failure?event=${data.event_id}&user=${query.user}`);
+    }
+
+    setSubmitLoading(false);
+  };
 
   return (
     <Layout>
@@ -86,152 +101,217 @@ function Vote({ query }) {
       />
 
       <div className="vote">
-        {!error ? (
-          data && data.exists ? (
-            <div className="user__vote">
+        {!loading ? (
+          <div className="vote__info">
+            <div className="vote__info_heading">
               <h1>Place your votes</h1>
               <p>
-                Welcome to the Quadratic Voting dashboard. You can use up to{" "}
-                <strong>{data.credits_per_voter} credits</strong> to vote across
-                the following voteable subjects.
+                You can use up to{" "}
+                <strong>{data.event_data.credits_per_voter} credits</strong> to
+                vote during this event.
               </p>
+            </div>
 
-              <div className="remaining__votes">
-                <label htmlFor="remaining_credits">
-                  Remaining vote credits
-                </label>
-                <input
-                  type="number"
-                  id="remaining_credits"
-                  value={votes}
-                  readOnly
-                />
+            <div className="event__details">
+              <div className="vote__loading event__summary">
+                <h2>{data.event_data.event_title}</h2>
+                <p>{data.event_data.event_description}</p>
               </div>
+            </div>
 
-              <div className="voteable__subjects">
-                <h2>Voteable subjects</h2>
-                <div className="voteable__subjects_divider" />
-                {subjects.map((subject, i) => {
+            <div className="event__options">
+              <h2>General Information</h2>
+              <div className="divider" />
+              <div className="event__option_item">
+                <div>
+                  <label>Voter Name</label>
+                  <p>Please enter your full name:</p>
+                  <input
+                    type="text"
+                    placeholder="Jane Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="event__options">
+              <h2>Voteable Options</h2>
+              <div className="divider" />
+              <div className="event__options_list">
+                {data.vote_data.map((option, i) => {
                   return (
-                    <div key={i} className="voteable__subject_item">
+                    <div key={i} className="event__option_item">
                       <div>
-                        <label>Title</label>
-                        <p>{subject.title}</p>
+                        <div>
+                          <label>Title</label>
+                          <h3>{option.title}</h3>
+                        </div>
+                        {option.description !== "" ? (
+                          <div>
+                            <label>Description</label>
+                            <p>{option.description}</p>
+                          </div>
+                        ) : null}
+                        {option.url !== "" ? (
+                          <div>
+                            <label>Link</label>
+                            <a
+                              href={option.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {option.url}
+                            </a>
+                          </div>
+                        ) : null}
                       </div>
-                      {subject.description ? (
-                        <div>
-                          <label>Description</label>
-                          <p>{subject.description}</p>
+                      <div className="event__option_item_vote">
+                        <label>Votes</label>
+                        <span className="item__vote_credits">
+                          Remaining credits: {credits}
+                        </span>
+                        <input type="number" value={votes[i]} disabled />
+                        <div className="item__vote_buttons">
+                          {calculateShow(votes[i], false) ? (
+                            <button onClick={() => makeVote(i, false)}>
+                              -
+                            </button>
+                          ) : (
+                            <button className="button__disabled" disabled>
+                              -
+                            </button>
+                          )}
+                          {calculateShow(votes[i], true) ? (
+                            <button onClick={() => makeVote(i, true)}>+</button>
+                          ) : (
+                            <button className="button__disabled" disabled>
+                              +
+                            </button>
+                          )}
                         </div>
-                      ) : null}
-                      {subject.url ? (
-                        <div>
-                          <label>Link</label>
-                          <a href={subject.url}>{subject.url}</a>
-                        </div>
-                      ) : null}
-                      <div>
-                        <br />
-                        <label>Your votes</label>
-                        <input value={subject.votes} readOnly />
-                        {(sumVotes === data.credits_per_voter &&
-                          subject.votes === 0) ||
-                        subject.votes === 0 ? (
-                          <button className="disabled__vote_button" disabled>
-                            -
-                          </button>
-                        ) : (
-                          <button onClick={() => increaseVote(i, false)}>
-                            -
-                          </button>
-                        )}
-                        {votes === 0 ? (
-                          <button className="disabled__vote_button" disabled>
-                            +
-                          </button>
-                        ) : (
-                          <button onClick={() => increaseVote(i, true)}>
-                            +
-                          </button>
-                        )}
+                        {data.voter_name !== "" && data.voter_name !== null ? (
+                          <div className="existing__votes">
+                            <span>
+                              You last allocated{" "}
+                              <strong>{data.vote_data[i].votes} votes </strong>
+                              to this option.
+                            </span>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   );
                 })}
-
-                <button className="submitButton" onClick={submitVotes}>
-                  {loading ? <Loader /> : "Submit votes"}
-                </button>
               </div>
             </div>
-          ) : (
-            <div className="no__user">
-              <h2>Enter your voting code</h2>
-              <p>You enterred an invalid voting code. Try again.</p>
-              <input
-                value={noUser}
-                onChange={(e) => setNoUser(e.target.value)}
-                placeholder="0918cd22-a487-4cd0-8e29-8144b9580b80"
-              />
-              <button onClick={loginUser}>Submit</button>
-            </div>
-          )
+
+            {name !== "" ? (
+              submitLoading ? (
+                <button className="submit__button" disabled>
+                  <Loader />
+                </button>
+              ) : (
+                <button onClick={submitVotes} className="submit__button">
+                  Submit Votes
+                </button>
+              )
+            ) : (
+              <button className="submit__button button__disabled" disabled>
+                Enter your name to vote
+              </button>
+            )}
+          </div>
         ) : (
-          <div className="no__user">
-            <h2>Enter your voting code</h2>
-            <p>
-              This should be a long code with multiple characters and dashes.
-            </p>
-            <input
-              value={noUser}
-              onChange={(e) => setNoUser(e.target.value)}
-              placeholder="0918cd22-a487-4cd0-8e29-8144b9580b80"
-            />
-            <button onClick={loginUser}>Submit</button>
+          <div className="vote__loading">
+            <h1>Loading...</h1>
+            <p>Please give us a moment to retrieve your voting profile.</p>
           </div>
         )}
       </div>
 
       <style jsx>{`
-        .user__vote {
-          max-width: 700px;
-          width: calc(100% - 40px);
-          padding: 50px 20px 80px 20px;
-          margin: 0 auto;
+        .vote {
+          text-align: center;
         }
 
-        .user__vote > h1 {
-          font-size: 40px;
+        .vote__info {
+          max-width: 660px;
+          width: calc(100% - 40px);
+          margin: 50px 0px;
+          padding: 0px 20px;
+          display: inline-block;
+          position: relative;
+        }
+
+        .event__summary {
+          display: inline-block;
+          box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
+          background-color: #fff;
+          margin: 20px 0px !important;
+        }
+
+        .event__summary > h2 {
+          color: #00d182;
+          margin: 0px;
+        }
+
+        .vote__loading {
+          max-width: 660px;
+          width: 100%;
+          border-radius: 10px;
+          display: inline-block;
+          margin: 50px 20px 0px 20px;
+          border: 1px solid #e7eaf3;
+          padding: 30px 0px;
+        }
+
+        .vote__loading > h1,
+        .vote__info_heading > h1 {
           color: #0f0857;
           margin: 0px;
         }
 
-        .user__vote > p {
+        .event__options {
+          margin-top: 60px;
+          text-align: left;
+        }
+
+        .event__options > h2 {
+          color: #0f0857;
+          margin-block-end: 0px;
+        }
+
+        .divider {
+          border-top: 1px solid #e7eaf3;
+          margin-top: 5px;
+        }
+
+        .vote__loading > p,
+        .vote__info_heading > p {
           font-size: 18px;
           line-height: 150%;
           color: rgb(107, 114, 128);
-          margin-block-start: 0px;
+          margin: 0px;
         }
 
-        .remaining__votes {
-          margin-top: 40px !important;
-        }
-
-        .remaining__votes,
-        .voteable__subject_item {
+        .event__option_item {
           background-color: #fff;
           border-radius: 8px;
           border: 1px solid #e7eaf3;
           box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
-          padding: 15px;
           max-width: 700px;
-          width: calc(100% - 30px);
+          width: 100%;
           margin: 25px 0px;
           text-align: left;
         }
 
-        .remaining__votes > label,
-        .voteable__subject_item > div > label {
+        .event__option_item > div:nth-child(1) {
+          padding: 15px;
+        }
+
+        .event__option_item label {
           display: block;
           color: #587299;
           font-weight: bold;
@@ -239,105 +319,96 @@ function Vote({ query }) {
           text-transform: uppercase;
         }
 
-        .remaining__votes > input {
-          font-size: 30px !important;
-          padding: 5px 5px !important;
+        .event__option_item > div > div {
+          margin: 25px 0px;
+        }
+        
+        .event__option_item > div > div:nth-child(1) {
+          margin-top: 5px;
         }
 
-        .voteable__subjects {
-          margin-top: 60px;
-          color: #0f0857;
+        .event__option_item > div > div:nth-last-child(1) {
+          margin-bottom: 5px;
         }
 
-        .voteable__subjects > h2 {
-          margin-block-end: 0px;
+        .event__option_item h3 {
+          margin: 2px 0px;
         }
 
-        .voteable__subjects_divider {
-          padding-top: 15px;
-          border-bottom: 1px solid #dde1ee;
+        .event__option_item p {
+          margin-top 5px;
         }
 
-        .voteable__subject_item > div > p,
-        .voteable__subject_item > div > a {
-          font-size: 18px;
+        .event__option_item a {
           text-decoration: none;
-          margin-block-start: 5px;
         }
 
-        .voteable__subject_item > div > button {
-          width: calc(50% - 10px);
-          font-size: 30px;
+        .event__option_item input {
+          width: calc(100% - 10px);
+          font-size: 18px;
+          border-radius: 5px;
+          border: 1px solid #e7eaf3;
+          padding: 10px 5px;
+          background-color: #fff;
+        }
+
+        .event__option_item_vote {
+          border-top: 2px solid #e7eaf3;
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+          padding: 15px;
+        }
+
+        .event__option_item_vote input {
+          text-align: center;
           font-weight: bold;
-          margin-top: 20px;
+        }
+
+        .item__vote_buttons {
+          margin: 10px 0px 0px 0px !important;
+        }
+
+        .item__vote_buttons > button {
+          width: 49%;
+          font-size: 22px;
+          font-weight: bold;
           border-radius: 5px;
           border: none;
           transition: 50ms ease-in-out;
+          padding: 5px 0px;
           cursor: pointer;
+          color: #fff;
         }
 
-        .disabled__vote_button {
+        .item__vote_buttons > button:nth-child(1) {
+          margin-right: 1%;
+          background-color: #0f0557;
+        }
+
+        .item__vote_buttons > button:nth-child(2) {
+          margin-left: 1%;
+          background-color: #00cc7e;
+        }
+
+        .item__vote_buttons > button:hover {
+          opacity: 0.8;
+        }
+        
+        .button__disabled {
           background-color: #e7eaf3 !important;
           color: #000 !important;
           cursor: not-allowed !important;
         }
 
-        .voteable__subject_item > div > button:nth-of-type(1) {
-          margin-right: 10px;
-          background-color: #00cc7e;
-          color: #000;
+        .item__vote_credits {
+          color: rgb(107, 114, 128);
+          font-size: 14px;
+          text-align: right;
+          display: block;
+          transform: translateY(-7.5px);
         }
 
-        .voteable__subject_item > div > button:nth-of-type(2) {
-          margin-left: 10px;
-          background-color: #0f0557;
-          color: #fff;
-        }
-
-        .voteable__subject_item > div > button:hover {
-          opacity: 0.8;
-        }
-
-        .no__user {
-          display: inline-block;
-          max-width: 270px;
-          width: 100%;
-          background-color: #fff;
-          margin: 20px;
-          border-radius: 8px;
-          border: 1px solid #e7eaf3;
-          box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
-          padding: 15px;
-          vertical-align: top;
-          height: 255px;
-          margin-top: calc((100vh - 390px) / 2);
-        }
-
-        .no__user > h2 {
-          color: #0f0857;
-          margin-block-end: 0px;
-        }
-
-        .no__user > p {
-          color: #587299;
-          margin-block-start: 5px;
-          margin-block-end: 40px;
-          line-height: 150%;
-        }
-
-        .no__user > input,
-        .remaining__votes > input,
-        .voteable__subject_item > div > input {
-          width: calc(100% - 10px);
-          font-size: 18px;
-          border-radius: 5px;
-          border: 1px solid #e7eaf3;
-          margin-top: 15px;
-          padding: 10px 5px;
-        }
-
-        .no__user > button,
-        .submitButton {
+        .submit__button {
           padding: 12px 0px;
           width: 100%;
           display: inline-block;
@@ -348,16 +419,20 @@ function Vote({ query }) {
           transition: 100ms ease-in-out;
           border: none;
           cursor: pointer;
-          margin-top: 10px;
-        }
-
-        .submitButton {
           margin-top: 50px;
         }
 
-        .no__user > button:hover,
-        .submitButton:hover {
+        .submit__button:hover {
           opacity: 0.8;
+        }
+
+        .existing__votes {
+          background-color: #ffffe0;
+          padding: 7.5px 10px;
+          width: calc(100% - 22px);
+          border-radius: 5px;
+          text-align: center;
+          border: 1px solid #fada5e;
         }
       `}</style>
     </Layout>
