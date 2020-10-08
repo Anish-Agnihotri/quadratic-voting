@@ -98,7 +98,6 @@ export default function Layout(props) {
           property="og:description"
           content="An easy tool to host a quadratic vote - Built by Gitcoin"
         />
-        <meta property="og:image" content="/meta.png" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://quadraticvote.co/" />
@@ -110,7 +109,19 @@ export default function Layout(props) {
           property="twitter:description"
           content="An easy tool to host a quadratic vote - Built by Gitcoin"
         />
-        <meta property="twitter:image" content="/meta.png" />
+
+        {props.event ? null : (
+          <>
+            <meta
+              property="og:image"
+              content="https://quadraticvote.co/meta.png"
+            />
+            <meta
+              property="twitter:image"
+              content="https://quadraticvote.co/meta.png"
+            />
+          </>
+        )}
 
         <link
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"

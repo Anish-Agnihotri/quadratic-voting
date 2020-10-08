@@ -1,6 +1,7 @@
 import useSWR from "swr"; // State-while-revalidate
 import fetch from "unfetch"; // Fetch for requests
 import moment from "moment"; // Moment date parsing
+import Head from "next/head"; // Custom meta images
 import Layout from "components/layout"; // Layout wrapper
 import Navigation from "components/navigation"; // Navigation
 import { HorizontalBar } from "react-chartjs-2"; // Horizontal bar graph
@@ -54,7 +55,19 @@ function Event({ query }) {
   };
 
   return (
-    <Layout>
+    <Layout event>
+      {/* Custom meta images */}
+      <Head>
+        <meta
+          property="og:image"
+          content={`https://qv-image.vercel.app/api/?id=${query.id}`}
+        />
+        <meta
+          property="twitter:image"
+          content={`https://qv-image.vercel.app/api/?id=${query.id}`}
+        />
+      </Head>
+
       {/* Navigation header */}
       <Navigation
         history={{
