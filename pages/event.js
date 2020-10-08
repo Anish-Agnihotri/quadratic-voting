@@ -30,10 +30,7 @@ function Event({ query }) {
   const downloadTXT = () => {
     // Collect voter URLs in single text string
     const text = data.event.voters
-      .map(
-        (voter, _) =>
-          `https://quadratic-voting.vercel.app/vote?user=${voter.id}`
-      )
+      .map((voter, _) => `https://quadraticvote.co/vote?user=${voter.id}`)
       .join("\n");
 
     // Create link component
@@ -85,7 +82,7 @@ function Event({ query }) {
           <label>Event URL</label>
           <p>Statistics dashboard URL</p>
           <input
-            value={`https://quadratic-voting.vercel.app/event?id=${query.id}`}
+            value={`https://quadraticvote.co/event?id=${query.id}`}
             readOnly
           />
         </div>
@@ -100,7 +97,7 @@ function Event({ query }) {
             <label className="private__label">Private Admin URL</label>
             <p>Save this URL to manage event and make changes</p>
             <input
-              value={`https://quadratic-voting.vercel.app/event?id=${query.id}&secret=${query.secret}`}
+              value={`https://quadraticvote.co/event?id=${query.id}&secret=${query.secret}`}
               readOnly
             />
           </div>
@@ -120,8 +117,7 @@ function Event({ query }) {
               // Collect voter urls as one text element
               value={data.event.voters
                 .map(
-                  (voter, _) =>
-                    `https://quadratic-voting.vercel.app/vote?user=${voter.id}`
+                  (voter, _) => `https://quadraticvote.co/vote?user=${voter.id}`
                 )
                 .join("\n")}
               readOnly

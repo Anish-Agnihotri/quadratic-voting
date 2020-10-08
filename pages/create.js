@@ -359,7 +359,7 @@ export default function Create() {
 
               {currentSubject.title !== "" ? (
                 // If form has title filled, allow submission
-                <button onClick={submitSubject}>Create Subject</button>
+                <button onClick={submitSubject}>Add Option</button>
               ) : (
                 // Else, show disabled state
                 <button className="button__disabled" disabled>
