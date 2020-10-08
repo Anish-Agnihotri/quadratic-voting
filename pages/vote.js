@@ -1,91 +1,137 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import Layout from "components/layout";
-import Navigation from "components/navigation";
-import { useState, useEffect } from "react";
-import Loader from "components/loader";
+import axios from "axios"; // Axios for requests
+import Loader from "components/loader"; // Placeholder loader
+import Layout from "components/layout"; // Layout wrapper
+import { useRouter } from "next/router"; // Router for URL params
+import { useState, useEffect } from "react"; // State management
+import Navigation from "components/navigation"; // Navigation component
 
 function Vote({ query }) {
-  const router = useRouter();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
-  const [votes, setVotes] = useState(null);
-  const [credits, setCredits] = useState(0);
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const router = useRouter(); // Hook into router
+  const [data, setData] = useState(null); // Data retrieved from DB
+  const [loading, setLoading] = useState(true); // Global loading state
+  const [name, setName] = useState(""); // Voter name
+  const [votes, setVotes] = useState(null); // Option votes array
+  const [credits, setCredits] = useState(0); // Total available credits
+  const [submitLoading, setSubmitLoading] = useState(false); // Component (button) submission loading state
 
+  /**
+   * Calculates culmulative number of votes and available credits on load
+   * @param {object} rData vote data object
+   */
   const calculateVotes = (rData) => {
-    const votesArr = rData.vote_data.map((item, i) => item.votes);
-    const votesArrMultiple = votesArr.map((item, i) => item * item);
+    // Collect array of all user votes per option
+    const votesArr = rData.vote_data.map((item, _) => item.votes);
+    // Multiple user votes (Quadratic Voting)
+    const votesArrMultiple = votesArr.map((item, _) => item * item);
+    // Set votes variable to array
     setVotes(votesArr);
+    // Set credits to:
     setCredits(
+      // Maximum votes -
       rData.event_data.credits_per_voter -
+        // Sum of all QV multiplied votes
         votesArrMultiple.reduce((a, b) => a + b, 0)
     );
   };
 
+  /**
+   * Update votes array with QV weighted vote increment/decrement
+   * @param {number} index of option to update
+   * @param {boolean} increment true === increment, else decrement
+   */
   const makeVote = (index, increment) => {
-    const tempArr = votes;
+    const tempArr = votes; // Collect all votes
+    // Increment or decrement depending on boolean
     increment
       ? (tempArr[index] = tempArr[index] + 1)
       : (tempArr[index] = tempArr[index] - 1);
 
-    setVotes(tempArr);
+    setVotes(tempArr); // Set votes array
+    // Calculate new sumVotes
     const sumVotes = tempArr
       .map((num, _) => num * num)
       .reduce((a, b) => a + b, 0);
+    // Set available credits to maximum credits - sumVotes
     setCredits(data.event_data.credits_per_voter - sumVotes);
   };
 
+  /**
+   * componentDidMount
+   */
   useEffect(() => {
+    // Collect voter information on load
     axios
       .get(`/api/events/find?id=${query.user}`)
+      // If voter exists
       .then((response) => {
+        // Set response data
         setData(response.data);
+        // Set name if exists
         setName(
           response.data.voter_name !== null ? response.data.voter_name : ""
         );
+        // Calculate QV votes with data
         calculateVotes(response.data);
+        // Toggle global loading state to false
         setLoading(false);
       })
+      // If voter does not exist
       .catch(() => {
-        console.log("error");
+        // Redirect to /place with error state default
         router.push("/place?error=true");
       });
   }, []);
 
+  /**
+   * Calculate render state of -/+ buttons based on possible actions
+   * @param {number} current number of option votes
+   * @param {boolean} increment -/+ button toggle
+   */
   const calculateShow = (current, increment) => {
     const canOccur =
       Math.abs(Math.pow(current, 2) - Math.pow(current + 1, 2)) <= credits;
+    // Check for absolute squared value of current - absolute squared valueof current + 1 <= credits
 
+    // If current votes === 0, and available credits === 0
     if (current === 0 && credits === 0) {
+      // Immediately return false
       return false;
     }
 
-    // Add
+    // Else, if adding
     if (increment) {
+      // Check for state of current
       return current <= 0 ? true : canOccur;
-      // Subtract
     } else {
+      // Or check for inverse state when subtracting
       return current >= 0 ? true : canOccur;
     }
   };
 
+  /**
+   * Vote submission POST
+   */
   const submitVotes = async () => {
+    // Toggle button loading state to true
     setSubmitLoading(true);
 
+    // POST data and collect status
     const { status } = await axios.post("/api/events/vote", {
-      id: query.user,
-      votes: votes,
-      name: name,
+      id: query.user, // Voter ID
+      votes: votes, // Vote data
+      name: name, // Voter name
     });
 
+    // If POST is a success
     if (status === 200) {
+      // Redirect to success page
       router.push(`success?event=${data.event_id}&user=${query.user}`);
     } else {
+      // Else, redirec to failure page
       router.push(`failure?event=${data.event_id}&user=${query.user}`);
     }
 
+    // Toggle button loading state to false
     setSubmitLoading(false);
   };
 
@@ -101,8 +147,10 @@ function Vote({ query }) {
       />
 
       <div className="vote">
+        {/* Loading state check */}
         {!loading ? (
           <div className="vote__info">
+            {/* General voting header */}
             <div className="vote__info_heading">
               <h1>Place your votes</h1>
               <p>
@@ -112,6 +160,7 @@ function Vote({ query }) {
               </p>
             </div>
 
+            {/* Project name and description */}
             <div className="event__details">
               <div className="vote__loading event__summary">
                 <h2>{data.event_data.event_title}</h2>
@@ -119,6 +168,7 @@ function Vote({ query }) {
               </div>
             </div>
 
+            {/* General information */}
             <div className="event__options">
               <h2>General Information</h2>
               <div className="divider" />
@@ -136,11 +186,13 @@ function Vote({ query }) {
               </div>
             </div>
 
+            {/* Voteable options */}
             <div className="event__options">
               <h2>Voteable Options</h2>
               <div className="divider" />
               <div className="event__options_list">
                 {data.vote_data.map((option, i) => {
+                  // Loop through each voteable option
                   return (
                     <div key={i} className="event__option_item">
                       <div>
@@ -149,12 +201,14 @@ function Vote({ query }) {
                           <h3>{option.title}</h3>
                         </div>
                         {option.description !== "" ? (
+                          // If description exists, show description
                           <div>
                             <label>Description</label>
                             <p>{option.description}</p>
                           </div>
                         ) : null}
                         {option.url !== "" ? (
+                          // If URL exists, show URL
                           <div>
                             <label>Link</label>
                             <a
@@ -174,6 +228,7 @@ function Vote({ query }) {
                         </span>
                         <input type="number" value={votes[i]} disabled />
                         <div className="item__vote_buttons">
+                          {/* Toggleable button states based on remaining credits */}
                           {calculateShow(votes[i], false) ? (
                             <button onClick={() => makeVote(i, false)}>
                               -
@@ -192,6 +247,7 @@ function Vote({ query }) {
                           )}
                         </div>
                         {data.voter_name !== "" && data.voter_name !== null ? (
+                          // If user has voted before, show historic votes
                           <div className="existing__votes">
                             <span>
                               You last allocated{" "}
@@ -207,23 +263,29 @@ function Vote({ query }) {
               </div>
             </div>
 
+            {/* Submission button states */}
             {name !== "" ? (
+              // Check for name being filled
               submitLoading ? (
+                // Check for existing button loading state
                 <button className="submit__button" disabled>
                   <Loader />
                 </button>
               ) : (
+                // Else, enable submission
                 <button onClick={submitVotes} className="submit__button">
                   Submit Votes
                 </button>
               )
             ) : (
+              // If name isn't filled, request fulfillment
               <button className="submit__button button__disabled" disabled>
                 Enter your name to vote
               </button>
             )}
           </div>
         ) : (
+          // If loading, show global loading state
           <div className="vote__loading">
             <h1>Loading...</h1>
             <p>Please give us a moment to retrieve your voting profile.</p>
@@ -231,6 +293,7 @@ function Vote({ query }) {
         )}
       </div>
 
+      {/* Component scoped CSS */}
       <style jsx>{`
         .vote {
           text-align: center;
@@ -439,6 +502,7 @@ function Vote({ query }) {
   );
 }
 
+// Collect params from URL
 Vote.getInitialProps = ({ query }) => {
   return { query };
 };

@@ -150,20 +150,21 @@ function calculateLinear(qvRaw) {
 }
 
 /**
- * Calculates and returns sujects weights based on QV forumla
+ * Calculates and returns QV summed votes
  * @param {integer[][]} qvRaw
- * @returns {integer[]} containing QV weights
+ * @returns {integer[]} containing QV votes
  */
 function calculateQV(qvRaw) {
-  let mapped = [];
+  let votes = [];
 
   // For individual subjects in qvRaw
   for (const subjectVotes of qvRaw) {
-    // Push subject weights to mapped array
-    mapped.push(subjectVotes.reduce((a, b) => a + b, 0));
+    // Push subject weights to mapped array which contains summed votes
+    votes.push(subjectVotes.reduce((a, b) => a + b, 0));
   }
 
-  return mapped;
+  // Return votes array
+  return votes;
 }
 
 /**
