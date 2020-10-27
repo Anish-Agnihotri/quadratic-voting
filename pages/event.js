@@ -166,26 +166,6 @@ function Event({ query }) {
         <div className="event__section">
           <label>Event Statistics</label>
           <div className="event__sub_section">
-            <label>Event Started</label>
-            <h3>
-              {!loading && data
-                ? moment(data.event.start_event_data).format(
-                    "MMMM Do YYYY, h:mm:ss a"
-                  )
-                : "Loading..."}
-            </h3>
-          </div>
-          <div className="event__sub_section">
-            <label>Event Finished</label>
-            <h3>
-              {!loading && data
-                ? moment(data.event.end_event_data).format(
-                    "MMMM Do YYYY, h:mm:ss a"
-                  )
-                : "Loading..."}
-            </h3>
-          </div>
-          <div className="event__sub_section">
             <label>Voting Participants</label>
             <h3>
               {!loading && data
@@ -236,6 +216,8 @@ function Event({ query }) {
           line-height: 150%;
           color: rgb(107, 114, 128);
           margin-block-start: 0px;
+          display: block;
+          word-wrap: break-word;
         }
 
         .event__section {
