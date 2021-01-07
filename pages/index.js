@@ -24,9 +24,9 @@ export default function Home() {
           <div className="home__cta_button">
             <img src="/vectors/create_event.svg" alt="Create event" />
             <h2>Create an event</h2>
-            <p>Setup Quadratic Voting for your event.</p>
+            <p>Set up Quadratic Voting for your event.</p>
             <Link href="/create">
-              <a>Setup Event</a>
+              <a>Set up Event</a>
             </Link>
           </div>
           <div className="home__cta_button">
