@@ -8,7 +8,7 @@ export default function Home() {
       <div className="home">
         {/* Home heading */}
         <div className="home__content">
-          <h1>QuadraticVote.co</h1>
+          <h1>RxC QV</h1>
           <h2>An easy tool to host a quadratic vote.</h2>
           <p>
             Quadratic Voting is the mathematically optimal way to vote in a

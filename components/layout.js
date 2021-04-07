@@ -84,30 +84,30 @@ export default function Layout(props) {
         />
         <meta name="theme-color" content="#ffffff" />
 
-        <title>QuadraticVote.co - EZ QV Tool</title>
-        <meta name="title" content="QuadraticVote.co - EZ QV Tool" />
+        <title>RxC QV</title>
+        <meta name="title" content="RxC QV" />
         <meta
           name="description"
-          content="An easy tool to host a quadratic vote - Built by Gitcoin"
+          content="An easy tool to host a quadratic vote"
         />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://quadraticvote.co/" />
-        <meta property="og:title" content="QuadraticVote.co - EZ QV Tool" />
+        <meta property="og:url" content="https://quadraticvote.radicalxchange.org/" />
+        <meta property="og:title" content="RxC QV" />
         <meta
           property="og:description"
-          content="An easy tool to host a quadratic vote - Built by Gitcoin"
+          content="An easy tool to host a quadratic vote"
         />
 
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://quadraticvote.co/" />
+        <meta property="twitter:url" content="https://quadraticvote.radicalxchange.org/" />
         <meta
           property="twitter:title"
-          content="QuadraticVote.co - EZ QV Tool"
+          content="RxC QV"
         />
         <meta
           property="twitter:description"
-          content="An easy tool to host a quadratic vote - Built by Gitcoin"
+          content="An easy tool to host a quadratic vote"
         />
 
         {props.event ? null : (
