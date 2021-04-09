@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "10.x"
+    "node": "15.x"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 2000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 2000"
   },
   "dependencies": {
     "@prisma/cli": "^2.8.0",
