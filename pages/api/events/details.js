@@ -1,4 +1,5 @@
 import prisma from "db"; // Import prisma
+import moment from "moment"; // Time formatting
 
 // --> /api/events/details
 export default async (req, res) => {
@@ -8,7 +9,7 @@ export default async (req, res) => {
   } = req;
 
   // Collect event information from event ID
-  const event = await prisma.events.findOne({
+  const event = await prisma.events.findUnique({
     where: { id: id },
   });
 
@@ -23,33 +24,42 @@ export default async (req, res) => {
   // After checking for administrator access, delete secret_key from event object
   delete event.secret_key;
 
-  // Collect voting stastistics
-  const statistics = generateStatistics(
-    // Number of voteable subjects
-    JSON.parse(event.event_data).length,
-    // Number of max voters
-    event.num_voters,
-    // Number of credits per voter
-    event.credits_per_voter,
-    // Array of voter preferences
-    voters
-  );
-
   // If private_key enables administrator access
   if (isAdmin) {
     // Pass individual voter row details to endpoint
     event.voters = voters;
   }
 
+  var statistics = null;
+  var chart = null;
+
+  // If event is concluded or private_key enables administrator access
+  if (isAdmin || (moment() > moment(event.end_event_date))) {
+    // Pass voting statistics to endpoint
+    statistics = generateStatistics(
+      // Number of voteable subjects
+      JSON.parse(event.event_data).length,
+      // Number of max voters
+      event.num_voters,
+      // Number of credits per voter
+      event.credits_per_voter,
+      // Array of voter preferences
+      voters
+    );
+  }
+
   // Parse event_data
   event.event_data = JSON.parse(event.event_data);
 
-  // Generate chart data for chartJS
-  const chart = generateChart(
-    event.event_data,
-    statistics.linear,
-    statistics.qv
-  );
+  // If event is concluded or private_key enables administrator access
+  if (isAdmin || (moment() > moment(event.end_event_date))) {
+    // Generate chart data for chartJS
+    chart = generateChart(
+      event.event_data,
+      statistics.linear,
+      statistics.qv
+    );
+  }
 
   // Return event data, computed statistics, and chart
   res.send({
@@ -124,7 +134,7 @@ function calculateLinear(qvRaw) {
   let mapped = [],
     sumWeights = 0;
 
-  // For indidividual subjects in qvRaw
+  // For individual subjects in qvRaw
   for (const subjectVotes of qvRaw) {
     // Calculate sum of votes
     const numCredits = subjectVotes.map((item, _) => Math.pow(item, 2));

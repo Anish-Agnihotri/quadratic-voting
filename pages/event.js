@@ -141,47 +141,68 @@ function Event({ query }) {
           </div>
         ) : null}
 
-        {/* Event public URL */}
-        <div className="event__section">
-          <label>Event Votes</label>
-          <p>Quadratic Voting-weighted voting results</p>
-          {!loading && data ? (
-            <div className="chart">
-              <HorizontalBar data={data.chart} width={90} height={60} />
-            </div>
-          ) : (
-            <div className="loading__chart">
-              <HashLoader
-                size={50}
-                color="#0f0857"
-                css={{ display: "inline-block" }}
-              />
-              <h3>Loading Chart...</h3>
-              <span>Please give us a moment</span>
-            </div>
-          )}
-        </div>
+        {/* Event public chart */}
+        {query.id !== "" &&
+        !loading &&
+        data ? (
+          <div className="event__section">
+            <label>Event Votes</label>
+            {data.chart ? (
+            <>
+              <p>Quadratic Voting-weighted voting results</p>
+              {!loading && data ? (
+                <div className="chart">
+                  <HorizontalBar data={data.chart} width={90} height={60} />
+                </div>
+              ) : (
+                <div className="loading__chart">
+                  <HashLoader
+                    size={50}
+                    color="#0f0857"
+                    css={{ display: "inline-block" }}
+                  />
+                  <h3>Loading Chart...</h3>
+                  <span>Please give us a moment</span>
+                </div>
+              )}
+            </>
+            ) : (
+              <p>Voting results will appear here when the event has concluded</p>
+            )}
+          </div>
+        ) : null}
 
-        {/* Event Publis statistics */}
-        <div className="event__section">
-          <label>Event Statistics</label>
-          <div className="event__sub_section">
-            <label>Voting Participants</label>
-            <h3>
-              {!loading && data
-                ? `${data.statistics.numberVoters.toLocaleString()} / ${data.statistics.numberVotersTotal.toLocaleString()}`
-                : "Loading..."}
-            </h3>
+
+        {/* Event public statistics */}
+        {query.id !== "" &&
+        !loading &&
+        data ? (
+          <div className="event__section">
+              <label>Event Statistics</label>
+              {data.statistics ? (
+              <>
+                <div className="event__sub_section">
+                  <label>Voting Participants</label>
+                  <h3>
+                    {!loading && data
+                      ? `${data.statistics.numberVoters.toLocaleString()} / ${data.statistics.numberVotersTotal.toLocaleString()}`
+                      : "Loading..."}
+                  </h3>
+                </div>
+                <div className="event__sub_section">
+                  <label>Credits Used</label>
+                  <h3>
+                    {!loading && data
+                      ? `${data.statistics.numberVotes.toLocaleString()} / ${data.statistics.numberVotesTotal.toLocaleString()}`
+                      : "Loading..."}
+                  </h3>
+                </div>
+              </>
+              ) : (
+                <p>Event Statistics will appear here when the event has concluded</p>
+              )}
           </div>
-          <div className="event__sub_section">
-            <label>Credits Used</label>
-            <h3>
-              {!loading && data
-                ? `${data.statistics.numberVotes.toLocaleString()} / ${data.statistics.numberVotesTotal.toLocaleString()}`
-                : "Loading..."}
-            </h3>
-          </div>
-        </div>
+        ) : null}
       </div>
 
       {/* Scoped styles */}

@@ -20,8 +20,8 @@ const defaultGlobalSettings = {
   event_description: "My Event Description",
   num_voters: 10,
   credits_per_voter: 100,
-  event_start_date: moment(),
-  event_end_date: moment().add(1, "days"),
+  start_event_date: moment(),
+  end_event_date: moment().add(1, "days"),
 };
 
 // Initial empty subject
@@ -236,8 +236,8 @@ export default function Create() {
             <p>When would you like to begin polling?</p>
             <Datetime
               className="create__settings_datetime"
-              value={globalSettings.event_start_date}
-              onChange={(value) => setEventData("event_start_date", value)}
+              value={globalSettings.start_event_date}
+              onChange={(value) => setEventData("start_event_date", value)}
             />
           </div>
 
@@ -247,8 +247,8 @@ export default function Create() {
             <p>When would you like to end polling?</p>
             <Datetime
               className="create__settings_datetime"
-              value={globalSettings.event_end_date}
-              onChange={(value) => setEventData("event_end_date", value)}
+              value={globalSettings.end_event_date}
+              onChange={(value) => setEventData("end_event_date", value)}
             />
           </div>
         </div>
