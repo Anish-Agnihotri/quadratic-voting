@@ -204,7 +204,7 @@ function Vote({ query }) {
                           // If description exists, show description
                           <div>
                             <label>Description</label>
-                            <p>{option.description}</p>
+                            <p className="event__option_item_desc">{option.description}</p>
                           </div>
                         ) : null}
                         {option.url !== "" ? (
@@ -385,7 +385,7 @@ function Vote({ query }) {
         .event__option_item > div > div {
           margin: 25px 0px;
         }
-        
+
         .event__option_item > div > div:nth-child(1) {
           margin-top: 5px;
         }
@@ -413,6 +413,10 @@ function Vote({ query }) {
           border: 1px solid #e7eaf3;
           padding: 10px 5px;
           background-color: #fff;
+        }
+
+        .event__option_item_desc {
+          white-space: pre;
         }
 
         .event__option_item_vote {
