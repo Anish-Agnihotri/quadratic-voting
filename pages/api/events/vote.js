@@ -5,7 +5,7 @@ export default async (req, res) => {
   const vote = req.body; // Collect vote data from POST
 
   // Look for current JSON data
-  const { vote_data } = await prisma.voters.findOne({
+  const { vote_data } = await prisma.voters.findUnique({
     // Using individual, secret vote ID passed from request body
     where: { id: vote.id },
     // And select only existing JSON data

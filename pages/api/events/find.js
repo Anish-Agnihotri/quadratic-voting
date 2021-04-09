@@ -17,7 +17,7 @@ export default async (req, res) => {
     }; // Setup response object
 
     // Collect voter information
-    const user = await prisma.voters.findOne({
+    const user = await prisma.voters.findUnique({
       // With ID from request body
       where: {
         id: id,
@@ -36,7 +36,7 @@ export default async (req, res) => {
       response.vote_data = user.vote_data;
 
       // Collect misc event data
-      const event_data = await prisma.events.findOne({
+      const event_data = await prisma.events.findUnique({
         // By searching for the Event ID from table of Events
         where: {
           id: user.event_uuid,
