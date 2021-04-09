@@ -130,6 +130,7 @@ export default function Layout(props) {
       </Head>
 
       {/* Page global header */}
+      {/*
       <div className="layout__header">
         <Link href="/">
           <a>
@@ -140,11 +141,13 @@ export default function Layout(props) {
           </a>
         </Link>
       </div>
+      */}
 
       {/* Page content */}
       <div className="layout__content">{props.children}</div>
 
       {/* Page footer */}
+      {/*
       <div className="layout__footer">
         <p>
           <a
@@ -244,6 +247,7 @@ export default function Layout(props) {
           </div>
         </div>
       </div>
+      */}
 
       {/* Global styling */}
       <style jsx global>{`
