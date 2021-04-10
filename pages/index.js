@@ -24,9 +24,9 @@ export default function Home() {
           <div className="home__cta_button">
             <img src="/vectors/create_event.svg" alt="Create event" />
             <h2>Create an event</h2>
-            <p>Setup Quadratic Voting for your event.</p>
+            <p>Set up Quadratic Voting for your event.</p>
             <Link href="/create">
-              <a>Setup Event</a>
+              <a>Set Up Event</a>
             </Link>
           </div>
           <div className="home__cta_button">
@@ -49,17 +49,17 @@ export default function Home() {
 
           .home__content > h1 {
             font-size: 40px;
-            color: #0f0857;
+            color: #000;
             margin: 0px;
           }
 
           .home__content > h2 {
-            color: #00d182;
+            color: #000;
             margin-block-start: 0px;
           }
 
           .home__content > h2:nth-of-type(2) {
-            color: #0f0857;
+            color: #000;
             margin-block-end: 0px;
             margin-block-start: 60px;
           }
@@ -67,7 +67,7 @@ export default function Home() {
           .home__content > p {
             font-size: 18px;
             line-height: 150%;
-            color: rgb(107, 114, 128);
+            color: #000;
           }
 
           .home__cta {
@@ -81,7 +81,7 @@ export default function Home() {
             background-color: #fff;
             margin: 20px;
             border-radius: 8px;
-            border: 1px solid #e7eaf3;
+            border: 1px solid #000;
             box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
             padding: 15px;
             vertical-align: top;
@@ -93,12 +93,13 @@ export default function Home() {
           }
 
           .home__cta_button > h2 {
-            color: #0f0857;
+            color: #000;
             margin-block-end: 0px;
           }
 
           .home__cta_button > p {
-            color: #587299;
+            color: #000;
+            font-size: .9rem;
             margin-block-start: 5px;
             margin-block-end: 40px;
           }
@@ -109,7 +110,7 @@ export default function Home() {
             width: 100%;
             display: inline-block;
             border-radius: 5px;
-            background-color: #0f0857;
+            background-color: #000;
             color: #fff;
             font-size: 18px;
             transition: 50ms ease-in-out;

@@ -7,80 +7,12 @@ export default function Layout(props) {
     <div className="layout">
       {/* Header */}
       <Head>
-        <link
-          rel="apple-touch-icon"
-          sizes="57x57"
-          href="/favicon/apple-icon-57x57.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="60x60"
-          href="/favicon/apple-icon-60x60.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="72x72"
-          href="/favicon/apple-icon-72x72.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="76x76"
-          href="/favicon/apple-icon-76x76.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="114x114"
-          href="/favicon/apple-icon-114x114.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="120x120"
-          href="/favicon/apple-icon-120x120.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="144x144"
-          href="/favicon/apple-icon-144x144.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="152x152"
-          href="/favicon/apple-icon-152x152.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/favicon/apple-icon-180x180.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="192x192"
-          href="/favicon/android-icon-192x192.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="96x96"
-          href="/favicon/favicon-96x96.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon/favicon-16x16.png"
-        />
+        <link rel="apple-touch-icon" href="/favicon/favicon-rxc.png" />
         <link rel="manifest" href="/favicon/manifest.json" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta
           name="msapplication-TileImage"
-          content="/favicon/ms-icon-144x144.png"
+          content="/favicon/favicon-rxc.png"
         />
         <meta name="theme-color" content="#ffffff" />
 
@@ -109,7 +41,7 @@ export default function Layout(props) {
           property="twitter:description"
           content="An easy tool to host a quadratic vote"
         />
-
+{/*
         {props.event ? null : (
           <>
             <meta
@@ -127,21 +59,20 @@ export default function Layout(props) {
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
           rel="stylesheet"
         />
+*/}
       </Head>
 
       {/* Page global header */}
-      {/*
       <div className="layout__header">
         <Link href="/">
           <a>
             <img
-              src="https://s.gitcoin.co/static/v2/images/logo_med_hover.c2969168bf04.gif"
-              alt="Gitcoin logo"
+              src="/logo.svg"
+              alt="RadicalxChange logo"
             />
           </a>
         </Link>
       </div>
-      */}
 
       {/* Page content */}
       <div className="layout__content">{props.children}</div>
@@ -254,8 +185,9 @@ export default function Layout(props) {
         body {
           padding: 0px;
           margin: 0px;
-          font-family: "Roboto", sans-serif;
-          background-color: #0f0632;
+          font-family: suisse_intlbook;
+          background-color: #ffffff;
+          text-align: center;
         }
       `}</style>
 
@@ -266,8 +198,9 @@ export default function Layout(props) {
           box-shadow: 0px 2px 10px rgba(151, 164, 175, 0.1);
           padding: 0px 20px;
           width: calc(100% - 40px);
-          background-image: url("/header-bg.png");
           background-position: center top;
+          background: #fff;
+          text-align: left;
         }
 
         .layout__header > a {
@@ -287,12 +220,11 @@ export default function Layout(props) {
         .layout__content {
           min-height: calc(100vh - 125px);
           padding-bottom: 60px;
-          background-color: #f6f9fc;
+          background-color: #fff;
           text-align: center;
         }
 
         .layout__footer {
-          background-image: url("/header-bg.png");
           background-position: center top;
           width: calc(100% - 40px);
           padding: 37.5px 20px;
@@ -309,7 +241,7 @@ export default function Layout(props) {
         .layout__footer > p > a {
           color: #000;
           padding: 1px 3px;
-          background-color: #00e996;
+          background-color: #fff;
           border-radius: 2px;
           font-weight: 500;
           text-decoration: none;
@@ -342,6 +274,39 @@ export default function Layout(props) {
           margin-top: 15px;
           margin-left: 15px;
           margin-right: 15px;
+        }
+
+        @font-face {
+            font-family: 'suisse_intlbook_italic';
+            src: url('./fonts/suisseintl-bookitalic-webfont.woff2') format('woff2'),
+                 url('./fonts/suisseintl-bookitalic-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+
+        }
+
+
+
+
+        @font-face {
+            font-family: 'suisse_intlbook';
+            src: url('./fonts/suisseintl-book-webfont.woff2') format('woff2'),
+                 url('./fonts/suisseintl-book-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+
+        }
+
+
+
+
+        @font-face {
+            font-family: 'messerv2.1condensed';
+            src: url('./fonts/messerv2.1-condensed-webfont.woff2') format('woff2'),
+                 url('./fonts/messerv2.1-condensed-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+
         }
       `}</style>
     </div>
