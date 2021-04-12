@@ -61,6 +61,14 @@ export default async (req, res) => {
     );
   }
 
+  // remove voter name and vote data to keep anonymous from election admins
+  const voterIds = event.voters;
+  voterIds.forEach((voter, _) => {
+    delete voter.voter_name;
+    delete voter.vote_data;
+  });
+  event.voters = voterIds;
+
   // Return event data, computed statistics, and chart
   res.send({
     event,
