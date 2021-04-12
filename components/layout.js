@@ -185,9 +185,8 @@ export default function Layout(props) {
         body {
           padding: 0px;
           margin: 0px;
-          font-family: suisse_intlbook;
-          background-color: #ffffff;
-          text-align: center;
+          font-family: "Roboto", sans-serif;
+          background-color: #0f0632;
         }
       `}</style>
 
@@ -199,31 +198,25 @@ export default function Layout(props) {
           padding: 0px 20px;
           width: calc(100% - 40px);
           background-position: center top;
-          background: #fff;
-          text-align: left;
+          background-color: #f6f9fc;
         }
-
         .layout__header > a {
           text-decoration: none;
           transition: 100ms ease-in-out;
         }
-
         .layout__header > a:hover {
           opacity: 0.8;
         }
-
         .layout__header > a > img {
           height: 45px;
           margin-top: 6.5px;
         }
-
         .layout__content {
           min-height: calc(100vh - 125px);
           padding-bottom: 60px;
-          background-color: #fff;
+          background-color: #f6f9fc;
           text-align: center;
         }
-
         .layout__footer {
           background-position: center top;
           width: calc(100% - 40px);
@@ -232,81 +225,41 @@ export default function Layout(props) {
           color: #fff;
           border-top: 3px solid #00d182;
         }
-
         .layout__footer > p {
           margin: 10px auto;
           line-height: 30px;
         }
-
         .layout__footer > p > a {
           color: #000;
           padding: 1px 3px;
-          background-color: #fff;
+          background-color: #00e996;
           border-radius: 2px;
           font-weight: 500;
           text-decoration: none;
           transition: 100ms ease-in-out;
         }
-
         .layout__footer > p > a:hover {
           opacity: 0.75;
         }
-
         .layout__footer > div > a,
         .layout__footer > div > div > a {
           text-decoration: none;
           transition: 100ms ease-in-out;
         }
-
         .layout__footer > div > a:hover,
         .layout__footer > div > div > a:hover {
           opacity: 0.75;
         }
-
         .layout__footer > div > a > img {
           height: 50px;
           margin: 10px 0px;
         }
-
         .layout__footer > div > div > a > img {
           height: 35px;
           filter: invert(100%);
           margin-top: 15px;
           margin-left: 15px;
           margin-right: 15px;
-        }
-
-        @font-face {
-            font-family: 'suisse_intlbook_italic';
-            src: url('./fonts/suisseintl-bookitalic-webfont.woff2') format('woff2'),
-                 url('./fonts/suisseintl-bookitalic-webfont.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-
-        }
-
-
-
-
-        @font-face {
-            font-family: 'suisse_intlbook';
-            src: url('./fonts/suisseintl-book-webfont.woff2') format('woff2'),
-                 url('./fonts/suisseintl-book-webfont.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-
-        }
-
-
-
-
-        @font-face {
-            font-family: 'messerv2.1condensed';
-            src: url('./fonts/messerv2.1-condensed-webfont.woff2') format('woff2'),
-                 url('./fonts/messerv2.1-condensed-webfont.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-
         }
       `}</style>
     </div>

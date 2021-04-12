@@ -182,7 +182,6 @@ export default function Create() {
             <p>What is your event called?</p>
             <input
               type="text"
-              className="input_field"
               id="event_title"
               placeholder="My Event Title"
               value={globalSettings.event_title}
@@ -196,7 +195,6 @@ export default function Create() {
             <p>Describe your event in under 240 characters:</p>
             <input
               type="text"
-              className="input_field"
               id="event_description"
               placeholder="My Event Description"
               value={globalSettings.event_description}
@@ -213,7 +211,6 @@ export default function Create() {
             <p>How many voting links would you like to generate? (Max: 250)</p>
             <input
               type="number"
-              className="input_field"
               id="num_voters"
               value={globalSettings.num_voters}
               onChange={(e) => setNumVoters(e.target.value)}
@@ -226,7 +223,6 @@ export default function Create() {
             <p>How many votes will each voter receive?</p>
             <input
               type="number"
-              className="input_field"
               max="100"
               min="1"
               step="1"
@@ -334,7 +330,6 @@ export default function Create() {
                 <label>Option Title</label>
                 <input
                   type="text"
-                  className="input_field"
                   placeholder="My Option Title"
                   value={currentSubject.title}
                   onChange={(e) => setSubjectData("title", e.target.value)}
@@ -346,7 +341,6 @@ export default function Create() {
                 <label>Option Description</label>
                 <textarea
                   placeholder="Description of the option."
-                  className="input_field"
                   value={currentSubject.description}
                   onChange={(e) =>
                     setSubjectData("description", e.target.value)
@@ -359,7 +353,6 @@ export default function Create() {
                 <label>Option Link</label>
                 <input
                   type="text"
-                  className="input_field"
                   placeholder="www.council.org/vote_info/1"
                   value={currentSubject.url}
                   onChange={(e) => setSubjectData("url", e.target.value)}
@@ -402,48 +395,41 @@ export default function Create() {
           width: calc(100% - 10px);
           font-size: 26px !important;
           border-radius: 5px;
-          border: 1px solid #000;
+          border: 1px solid #e7eaf3;
           margin-top: 15px;
           padding: 5px 0px 5px 5px;
-          background-color: #fff;
         }
-
         .accordion__button {
-          background-color: #fff;
+          background-color: #e7eaf3;
           max-width: calc(100% - 36px);
         }
-
         .accordion__button:hover {
           background-color: #dde1ee;
         }
-
         .accordion__value {
           margin: 0px 0px 10px 0px;
           width: 100%;
         }
-
         .accordion__value > label {
           display: block;
-          color: #000;
+          color: #587299;
           font-weight: bold;
           font-size: 18px;
           text-transform: uppercase;
         }
-
         .accordion__value > textarea {
           width: calc(100% - 10px);
           max-width: calc(100% - 10px);
           font-size: 18px;
           border-radius: 5px;
-          border: 1px solid #000;
+          border: 1px solid #e7eaf3;
           margin-top: 5px;
           padding: 8px 5px;
           font-family: "Roboto", sans-serif;
         }
-
         .accordion__value > a {
           text-decoration: none;
-          color: #000;
+          color: #0f0857;
           transition: 50ms ease-in-out;
           font-size: 18px;
           display: inline-block;
@@ -452,21 +438,18 @@ export default function Create() {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-
         .accordion__value > a:hover {
           opacity: 0.8;
         }
-
         .accordion__buttons {
           text-align: center;
           padding-top: 10px;
         }
-
         .accordion__buttons > button {
           padding: 8px 15px;
           display: inline-block;
           border-radius: 5px;
-          background-color: #000;
+          background-color: #0f0857;
           color: #fff;
           font-size: 16px;
           transition: 100ms ease-in-out;
@@ -474,15 +457,12 @@ export default function Create() {
           cursor: pointer;
           margin: 0px 10px;
         }
-
         .accordion__buttons > button:nth-child(2) {
-          background-color: #000;
+          background-color: #ff1c48;
         }
-
         .accordion__buttons > button:hover {
           opacity: 0.8;
         }
-
         div:focus,
         button:focus {
           outline: none;
@@ -493,35 +473,24 @@ export default function Create() {
       <style jsx>{`
         .create {
           padding-bottom: 80px;
-          background-color: #fff;
         }
-
-        .input_field {
-          background-color: #fff;
-          border-radius: 5px;
-          border: 1px solid #000;
-        }
-
         .create__content {
           max-width: 700px;
           padding: 30px 20px 0px 20px;
           margin: 0px auto;
         }
-
         .create__content > h1 {
           font-size: 35px;
-          color: #000;
+          color: #0f0857;
           margin: 0px;
         }
-
         .create__content > p,
         .create__settings > p {
           font-size: 18px;
           line-height: 150%;
-          color: #000;
+          color: rgb(107, 114, 128);
           margin-block-start: 10px;
         }
-
         .create__settings {
           text-align: left;
           width: calc(100% - 40px);
@@ -529,108 +498,88 @@ export default function Create() {
           padding: 20px 20px;
           margin: 0px auto;
         }
-
         .create__settings > h2 {
-          color: #000;
+          color: #0f0857;
           margin-block-end: 0px;
         }
-
         .create__settings > h3 {
-          color: #000;
+          color: #0f0857;
           transform: translate(5px, 15px);
         }
-
         .create__settings > p {
           margin-block-start: 5px;
         }
-
         .create__settings_section {
           background-color: #fff;
+          background-color: #fff;
           border-radius: 8px;
-          border: 1px solid #000;
+          border: 1px solid #e7eaf3;
           box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
           padding: 15px;
           width: calc(100% - 30px);
           margin: 25px 0px;
         }
-
         .create__settings_section > label,
         .create__subject_form > div > label {
           display: block;
-          color: #000;
+          color: #587299;
           font-weight: bold;
           font-size: 18px;
           text-transform: uppercase;
         }
-
         .create__settings_section > p {
           margin: 0px;
         }
-
         .create__subject_form > div {
           margin: 20px 0px;
         }
-
         .create__subject_form > div:nth-child(1) {
           margin-top: 0px;
         }
-
         .create__subject_form > div > input,
         .create__subject_form > div > textarea {
           width: calc(100% - 10px);
           max-width: calc(100% - 10px);
           font-size: 18px;
           border-radius: 5px;
-          border: 1px solid #000;
+          border: 1px solid #e7eaf3;
           margin-top: 5px;
           padding: 8px 5px;
           font-family: "Roboto", sans-serif;
         }
-
         .create__subject_form > button,
-        .create__event_button {
-          padding: 12px 0px;
-          width: 100%;
-          display: inline-block;
-          border-radius: 5px;
-          background-color: #000;
-          color: #fff;
-          font-size: 18px;
-          transition: 100ms ease-in-out;
-          border: 1px solid #000;
-          cursor: pointer;
-        }
-        .create__subject_form > button__disabled,
-        .button__disabled,
+        .create__event_button,
         .create__event_disabled {
           padding: 12px 0px;
           width: 100%;
           display: inline-block;
           border-radius: 5px;
-          background-color: #fff !important;
+          background-color: #0f0857;
+          color: #fff;
           font-size: 18px;
           transition: 100ms ease-in-out;
-          border: 1px solid #000;
+          border: none;
+          cursor: pointer;
+        }
+        .button__disabled,
+        .create__event_disabled {
+          background-color: #e7eaf3 !important;
           color: #000 !important;
           cursor: not-allowed !important;
         }
-
         .button__disabled:hover,
         .create__event_disabled:hover {
           opacity: 1 !important;
         }
-
         .create__subject_form > button:hover,
         .create__event_button:hover {
           opacity: 0.8;
         }
-
         .empty__subjects {
-          color: #000;
+          color: #587299;
           display: block;
           text-align: center;
         }
-
         .create__submission {
           margin: 0px auto;
           max-width: 660px;
