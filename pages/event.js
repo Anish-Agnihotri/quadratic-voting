@@ -6,6 +6,8 @@ import Layout from "components/layout"; // Layout wrapper
 import Navigation from "components/navigation"; // Navigation
 import { HorizontalBar } from "react-chartjs-2"; // Horizontal bar graph
 import HashLoader from "react-spinners/HashLoader"; // Loader
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 
 // Setup fetcher for SWR
 const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -52,6 +54,31 @@ function Event({ query }) {
 
     // Remove link component from body
     document.body.removeChild(element);
+  };
+
+  const downloadXLSX = () => {
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
+    const options = data.event.event_data
+    const effectiveVotes = data.chart.datasets[0].data
+    const percentCredits = data.chart.datasets[1].data
+    var rows = [];
+    var i;
+    for (i = 0; i < options.length; i++) {
+      var option = {
+        title: options[i].title,
+        description: options[i].description,
+        url: options[i].url,
+        effective_votes: effectiveVotes[i],
+        percent_credits: percentCredits[i],
+      }
+      rows.push(option);
+    }
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const fileData = new Blob([excelBuffer], {type: fileType});
+    FileSaver.saveAs(fileData, 'qv-results' + fileExtension);
   };
 
   return (
@@ -169,6 +196,9 @@ function Event({ query }) {
             ) : (
               <p>Voting results will appear here when the event has concluded</p>
             )}
+            <button onClick={downloadXLSX} className="download__button">
+              Download spreadsheet
+            </button>
           </div>
         ) : null}
 
