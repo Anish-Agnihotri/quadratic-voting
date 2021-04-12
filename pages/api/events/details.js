@@ -212,7 +212,7 @@ function generateChart(subjects, linearWeights, weights) {
     datasets: [
       {
         backgroundColor: "rgba(0, 209, 130, 1)",
-        label: "Quadratic Votes",
+        label: "Effective Votes",
         data,
       },
       {
