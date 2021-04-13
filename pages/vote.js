@@ -178,168 +178,186 @@ function Vote({ query }) {
                     </Link>
                     </>
                   ) : (
-                    <h3>This event closes {moment(data.event_data.end_event_date).format('MMMM Do YYYY, h:mm:ss a')}</h3>
+                    <>
+                    {(moment() < moment(data.event_data.start_event_date)) ? (
+                      <h3>This event begins {moment(data.event_data.start_event_date).format('MMMM Do YYYY, h:mm:ss a')}</h3>
+                    ) : (
+                      <h3>This event closes {moment(data.event_data.end_event_date).format('MMMM Do YYYY, h:mm:ss a')}</h3>
+                    )}
+                    </>
                   )}
                   </>
                 ) : null}
               </div>
             </div>
 
-            {/* General information */}
-            <div className="event__options">
-              <h2>General Information</h2>
-              <div className="divider" />
-              <div className="event__option_item">
-                <div>
-                  <label>Voter Name</label>
-                  {data ? (
-                    <>
-                    {(moment() > moment(data.event_data.end_event_date)) ? (
-                      <input
-                        disabled
-                        type="text"
-                        placeholder="Jane Doe"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    ) : (
-                      <>
-                      <p>Please enter your full name:</p>
-                      <input
-                        type="text"
-                        placeholder="Jane Doe"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                      </>
-                    )}
-                    </>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            {/* Voteable options */}
-            <div className="event__options">
-              <h2>Voteable Options</h2>
-              <div className="divider" />
-              <div className="event__options_list">
-                {data.vote_data.map((option, i) => {
-                  // Loop through each voteable option
-                  return (
-                    <div key={i} className="event__option_item">
-                      <div>
-                        <div>
-                          <label>Title</label>
-                          <h3>{option.title}</h3>
-                        </div>
-                        {option.description !== "" ? (
-                          // If description exists, show description
-                          <div>
-                            <label>Description</label>
-                            <p className="event__option_item_desc">{option.description}</p>
-                          </div>
-                        ) : null}
-                        {option.url !== "" ? (
-                          // If URL exists, show URL
-                          <div>
-                            <label>Link</label>
-                            <a
-                              href={option.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {option.url}
-                            </a>
-                          </div>
-                        ) : null}
-                      </div>
-                      <div className="event__option_item_vote">
-                        <label>Votes</label>
-                        {data ? (
-                          <>
-                          {(moment() > moment(data.event_data.end_event_date)) ? (
-                            <></>
-                          ) : (
-                            <span className="item__vote_credits">
-                              Remaining credits: {credits}
-                            </span>
-                          )}
-                          </>
-                        ) : null}
-                        <input type="number" value={votes[i]} disabled />
-                        <div className="item__vote_buttons">
-                          {data ? (
-                            <>
-                            {(moment() > moment(data.event_data.end_event_date)) ? (
-                              <></>
-                            ) : (
-                              <>
-                                {/* Toggleable button states based on remaining credits */}
-                                {calculateShow(votes[i], false) ? (
-                                  <button name="input-element" onClick={() => makeVote(i, false)}>
-                                    -
-                                  </button>
-                                ) : (
-                                  <button className="button__disabled" disabled>
-                                    -
-                                  </button>
-                                )}
-                                {calculateShow(votes[i], true) ? (
-                                  <button name="input-element" onClick={() => makeVote(i, true)}>+</button>
-                                ) : (
-                                  <button className="button__disabled" disabled>
-                                    +
-                                  </button>
-                                )}
-                              </>
-                            )}
-                            </>
-                          ) : null}
-                        </div>
-                        {data.voter_name !== "" && data.voter_name !== null ? (
-                          // If user has voted before, show historic votes
-                          <div className="existing__votes">
-                            <span>
-                              You last allocated{" "}
-                              <strong>{data.vote_data[i].votes} votes </strong>
-                              to this option.
-                            </span>
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
+            {/* Ballot */}
             {data ? (
               <>
-              {(moment() > moment(data.event_data.end_event_date)) ? (
+              {/* Hide ballot if event hasn't started yet */}
+              {(moment() < moment(data.event_data.start_event_date)) ? (
                 <></>
               ) : (
                 <>
-                  {/* Submission button states */}
-                  {name !== "" ? (
-                    // Check for name being filled
-                    submitLoading ? (
-                      // Check for existing button loading state
-                      <button className="submit__button" disabled>
-                        <Loader />
-                      </button>
-                    ) : (
-                      // Else, enable submission
-                      <button name="input-element" onClick={submitVotes} className="submit__button">
-                        Submit Votes
-                      </button>
-                    )
+                {/* General information */}
+                <div className="event__options">
+                  <h2>General Information</h2>
+                  <div className="divider" />
+                  <div className="event__option_item">
+                    <div>
+                      <label>Voter Name</label>
+                      {data ? (
+                        <>
+                        {(moment() > moment(data.event_data.end_event_date)) ? (
+                          <input
+                            disabled
+                            type="text"
+                            placeholder="Jane Doe"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                          />
+                        ) : (
+                          <>
+                          <p>Please enter your full name:</p>
+                          <input
+                            type="text"
+                            placeholder="Jane Doe"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                          />
+                          </>
+                        )}
+                        </>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Voteable options */}
+                <div className="event__options">
+                  <h2>Voteable Options</h2>
+                  <div className="divider" />
+                  <div className="event__options_list">
+                    {data.vote_data.map((option, i) => {
+                      // Loop through each voteable option
+                      return (
+                        <div key={i} className="event__option_item">
+                          <div>
+                            <div>
+                              <label>Title</label>
+                              <h3>{option.title}</h3>
+                            </div>
+                            {option.description !== "" ? (
+                              // If description exists, show description
+                              <div>
+                                <label>Description</label>
+                                <p className="event__option_item_desc">{option.description}</p>
+                              </div>
+                            ) : null}
+                            {option.url !== "" ? (
+                              // If URL exists, show URL
+                              <div>
+                                <label>Link</label>
+                                <a
+                                  href={option.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {option.url}
+                                </a>
+                              </div>
+                            ) : null}
+                          </div>
+                          <div className="event__option_item_vote">
+                            <label>Votes</label>
+                            {data ? (
+                              <>
+                              {(moment() > moment(data.event_data.end_event_date)) ? (
+                                <></>
+                              ) : (
+                                <span className="item__vote_credits">
+                                  Remaining credits: {credits}
+                                </span>
+                              )}
+                              </>
+                            ) : null}
+                            <input type="number" value={votes[i]} disabled />
+                            <div className="item__vote_buttons">
+                              {data ? (
+                                <>
+                                {(moment() > moment(data.event_data.end_event_date)) ? (
+                                  <></>
+                                ) : (
+                                  <>
+                                    {/* Toggleable button states based on remaining credits */}
+                                    {calculateShow(votes[i], false) ? (
+                                      <button name="input-element" onClick={() => makeVote(i, false)}>
+                                        -
+                                      </button>
+                                    ) : (
+                                      <button className="button__disabled" disabled>
+                                        -
+                                      </button>
+                                    )}
+                                    {calculateShow(votes[i], true) ? (
+                                      <button name="input-element" onClick={() => makeVote(i, true)}>+</button>
+                                    ) : (
+                                      <button className="button__disabled" disabled>
+                                        +
+                                      </button>
+                                    )}
+                                  </>
+                                )}
+                                </>
+                              ) : null}
+                            </div>
+                            {data.voter_name !== "" && data.voter_name !== null ? (
+                              // If user has voted before, show historic votes
+                              <div className="existing__votes">
+                                <span>
+                                  You last allocated{" "}
+                                  <strong>{data.vote_data[i].votes} votes </strong>
+                                  to this option.
+                                </span>
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {data ? (
+                  <>
+                  {(moment() > moment(data.event_data.end_event_date)) ? (
+                    <></>
                   ) : (
-                    // If name isn't filled, request fulfillment
-                    <button className="submit__button button__disabled" disabled>
-                      Enter your name to vote
-                    </button>
+                    <>
+                      {/* Submission button states */}
+                      {name !== "" ? (
+                        // Check for name being filled
+                        submitLoading ? (
+                          // Check for existing button loading state
+                          <button className="submit__button" disabled>
+                            <Loader />
+                          </button>
+                        ) : (
+                          // Else, enable submission
+                          <button name="input-element" onClick={submitVotes} className="submit__button">
+                            Submit Votes
+                          </button>
+                        )
+                      ) : (
+                        // If name isn't filled, request fulfillment
+                        <button className="submit__button button__disabled" disabled>
+                          Enter your name to vote
+                        </button>
+                      )}
+                    </>
                   )}
+                  </>
+                ) : null}
                 </>
               )}
               </>
