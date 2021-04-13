@@ -1,4 +1,6 @@
 import axios from "axios"; // Axios for requests
+import moment from "moment"; // Moment date parsing
+import Link from "next/link"; // Dynamic links
 import Loader from "components/loader"; // Placeholder loader
 import Layout from "components/layout"; // Layout wrapper
 import { useRouter } from "next/router"; // Router for URL params
@@ -165,6 +167,21 @@ function Vote({ query }) {
               <div className="vote__loading event__summary">
                 <h2>{data.event_data.event_title}</h2>
                 <p>{data.event_data.event_description}</p>
+                {data ? (
+                  <>
+                  {(moment() > moment(data.event_data.end_event_date)) ? (
+                    <>
+                    <h3>This event has concluded. Click below to to see the results!</h3>
+                    {/* Redirect to event dashboard */}
+                    <Link href={`/event?id=${data.event_id}`}>
+                      <a>See event dashboard</a>
+                    </Link>
+                    </>
+                  ) : (
+                    <h3>This event closes {moment(data.event_data.end_event_date).format('MMMM Do YYYY, h:mm:ss a')}</h3>
+                  )}
+                  </>
+                ) : null}
               </div>
             </div>
 
@@ -175,13 +192,29 @@ function Vote({ query }) {
               <div className="event__option_item">
                 <div>
                   <label>Voter Name</label>
-                  <p>Please enter your full name:</p>
-                  <input
-                    type="text"
-                    placeholder="Jane Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
+                  {data ? (
+                    <>
+                    {(moment() > moment(data.event_data.end_event_date)) ? (
+                      <input
+                        disabled
+                        type="text"
+                        placeholder="Jane Doe"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    ) : (
+                      <>
+                      <p>Please enter your full name:</p>
+                      <input
+                        type="text"
+                        placeholder="Jane Doe"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      </>
+                    )}
+                    </>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -223,28 +256,46 @@ function Vote({ query }) {
                       </div>
                       <div className="event__option_item_vote">
                         <label>Votes</label>
-                        <span className="item__vote_credits">
-                          Remaining credits: {credits}
-                        </span>
+                        {data ? (
+                          <>
+                          {(moment() > moment(data.event_data.end_event_date)) ? (
+                            <></>
+                          ) : (
+                            <span className="item__vote_credits">
+                              Remaining credits: {credits}
+                            </span>
+                          )}
+                          </>
+                        ) : null}
                         <input type="number" value={votes[i]} disabled />
                         <div className="item__vote_buttons">
-                          {/* Toggleable button states based on remaining credits */}
-                          {calculateShow(votes[i], false) ? (
-                            <button onClick={() => makeVote(i, false)}>
-                              -
-                            </button>
-                          ) : (
-                            <button className="button__disabled" disabled>
-                              -
-                            </button>
-                          )}
-                          {calculateShow(votes[i], true) ? (
-                            <button onClick={() => makeVote(i, true)}>+</button>
-                          ) : (
-                            <button className="button__disabled" disabled>
-                              +
-                            </button>
-                          )}
+                          {data ? (
+                            <>
+                            {(moment() > moment(data.event_data.end_event_date)) ? (
+                              <></>
+                            ) : (
+                              <>
+                                {/* Toggleable button states based on remaining credits */}
+                                {calculateShow(votes[i], false) ? (
+                                  <button name="input-element" onClick={() => makeVote(i, false)}>
+                                    -
+                                  </button>
+                                ) : (
+                                  <button className="button__disabled" disabled>
+                                    -
+                                  </button>
+                                )}
+                                {calculateShow(votes[i], true) ? (
+                                  <button name="input-element" onClick={() => makeVote(i, true)}>+</button>
+                                ) : (
+                                  <button className="button__disabled" disabled>
+                                    +
+                                  </button>
+                                )}
+                              </>
+                            )}
+                            </>
+                          ) : null}
                         </div>
                         {data.voter_name !== "" && data.voter_name !== null ? (
                           // If user has voted before, show historic votes
@@ -263,26 +314,36 @@ function Vote({ query }) {
               </div>
             </div>
 
-            {/* Submission button states */}
-            {name !== "" ? (
-              // Check for name being filled
-              submitLoading ? (
-                // Check for existing button loading state
-                <button className="submit__button" disabled>
-                  <Loader />
-                </button>
+            {data ? (
+              <>
+              {(moment() > moment(data.event_data.end_event_date)) ? (
+                <></>
               ) : (
-                // Else, enable submission
-                <button onClick={submitVotes} className="submit__button">
-                  Submit Votes
-                </button>
-              )
-            ) : (
-              // If name isn't filled, request fulfillment
-              <button className="submit__button button__disabled" disabled>
-                Enter your name to vote
-              </button>
-            )}
+                <>
+                  {/* Submission button states */}
+                  {name !== "" ? (
+                    // Check for name being filled
+                    submitLoading ? (
+                      // Check for existing button loading state
+                      <button className="submit__button" disabled>
+                        <Loader />
+                      </button>
+                    ) : (
+                      // Else, enable submission
+                      <button name="input-element" onClick={submitVotes} className="submit__button">
+                        Submit Votes
+                      </button>
+                    )
+                  ) : (
+                    // If name isn't filled, request fulfillment
+                    <button className="submit__button button__disabled" disabled>
+                      Enter your name to vote
+                    </button>
+                  )}
+                </>
+              )}
+              </>
+            ) : null}
           </div>
         ) : (
           // If loading, show global loading state
@@ -318,6 +379,25 @@ function Vote({ query }) {
         .event__summary > h2 {
           color: #00d182;
           margin: 0px;
+        }
+
+        .event__summary > a {
+          max-width: 200px;
+          width: calc(100% - 40px);
+          margin: 10px 20px;
+          padding: 12px 0px;
+          border-radius: 5px;
+          text-decoration: none;
+          font-size: 18px;
+          display: inline-block;
+          text-decoration: none;
+          transition: 100ms ease-in-out;
+          background-color: #0f0857;
+          color: #fff;
+        }
+
+        .event__summary > a:hover {
+          opacity: 0.8;
         }
 
         .vote__loading {

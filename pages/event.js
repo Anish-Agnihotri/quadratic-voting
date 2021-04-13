@@ -178,9 +178,14 @@ function Event({ query }) {
             <>
               <p>Quadratic Voting-weighted voting results</p>
               {!loading && data ? (
+                <>
                 <div className="chart">
                   <HorizontalBar data={data.chart} width={90} height={60} />
                 </div>
+                <button onClick={downloadXLSX} className="download__button">
+                  Download spreadsheet
+                </button>
+                </>
               ) : (
                 <div className="loading__chart">
                   <HashLoader
@@ -196,9 +201,6 @@ function Event({ query }) {
             ) : (
               <p>Voting results will appear here when the event has concluded</p>
             )}
-            <button onClick={downloadXLSX} className="download__button">
-              Download spreadsheet
-            </button>
           </div>
         ) : null}
 
