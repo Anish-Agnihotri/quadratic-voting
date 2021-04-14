@@ -395,16 +395,18 @@ export default function Create() {
           width: calc(100% - 10px);
           font-size: 26px !important;
           border-radius: 5px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           margin-top: 15px;
           padding: 5px 0px 5px 5px;
         }
         .accordion__button {
-          background-color: #e7eaf3;
+          background-color: #f1f2e5;
+          color: #000;
           max-width: calc(100% - 36px);
         }
         .accordion__button:hover {
-          background-color: #dde1ee;
+          background-color: #f1f2e5;
+          opacity: 0.8;
         }
         .accordion__value {
           margin: 0px 0px 10px 0px;
@@ -412,7 +414,7 @@ export default function Create() {
         }
         .accordion__value > label {
           display: block;
-          color: #587299;
+          color: #000;
           font-weight: bold;
           font-size: 18px;
           text-transform: uppercase;
@@ -422,14 +424,14 @@ export default function Create() {
           max-width: calc(100% - 10px);
           font-size: 18px;
           border-radius: 5px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           margin-top: 5px;
           padding: 8px 5px;
-          font-family: "Roboto", sans-serif;
+          font-family: suisse_intlbook;
         }
         .accordion__value > a {
           text-decoration: none;
-          color: #0f0857;
+          color: #000;
           transition: 50ms ease-in-out;
           font-size: 18px;
           display: inline-block;
@@ -449,8 +451,8 @@ export default function Create() {
           padding: 8px 15px;
           display: inline-block;
           border-radius: 5px;
-          background-color: #0f0857;
-          color: #fff;
+          background-color: #000;
+          color: #edff38;
           font-size: 16px;
           transition: 100ms ease-in-out;
           border: none;
@@ -458,7 +460,9 @@ export default function Create() {
           margin: 0px 10px;
         }
         .accordion__buttons > button:nth-child(2) {
-          background-color: #ff1c48;
+          background-color: #fff;
+          color: #000;
+          border: 1px solid black
         }
         .accordion__buttons > button:hover {
           opacity: 0.8;
@@ -481,14 +485,14 @@ export default function Create() {
         }
         .create__content > h1 {
           font-size: 35px;
-          color: #0f0857;
+          color: #000;
           margin: 0px;
         }
         .create__content > p,
         .create__settings > p {
           font-size: 18px;
           line-height: 150%;
-          color: rgb(107, 114, 128);
+          color: #80806b;
           margin-block-start: 10px;
         }
         .create__settings {
@@ -499,11 +503,11 @@ export default function Create() {
           margin: 0px auto;
         }
         .create__settings > h2 {
-          color: #0f0857;
+          color: #000;
           margin-block-end: 0px;
         }
         .create__settings > h3 {
-          color: #0f0857;
+          color: #000;
           transform: translate(5px, 15px);
         }
         .create__settings > p {
@@ -513,7 +517,7 @@ export default function Create() {
           background-color: #fff;
           background-color: #fff;
           border-radius: 8px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
           padding: 15px;
           width: calc(100% - 30px);
@@ -522,7 +526,7 @@ export default function Create() {
         .create__settings_section > label,
         .create__subject_form > div > label {
           display: block;
-          color: #587299;
+          color: #000;
           font-weight: bold;
           font-size: 18px;
           text-transform: uppercase;
@@ -542,10 +546,10 @@ export default function Create() {
           max-width: calc(100% - 10px);
           font-size: 18px;
           border-radius: 5px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           margin-top: 5px;
           padding: 8px 5px;
-          font-family: "Roboto", sans-serif;
+          font-family: suisse_intlbook;
         }
         .create__subject_form > button,
         .create__event_button,
@@ -554,8 +558,8 @@ export default function Create() {
           width: 100%;
           display: inline-block;
           border-radius: 5px;
-          background-color: #0f0857;
-          color: #fff;
+          background-color: #000;
+          color: #edff38;
           font-size: 18px;
           transition: 100ms ease-in-out;
           border: none;
@@ -563,7 +567,7 @@ export default function Create() {
         }
         .button__disabled,
         .create__event_disabled {
-          background-color: #e7eaf3 !important;
+          background-color: #f1f2e5 !important;
           color: #000 !important;
           cursor: not-allowed !important;
         }
@@ -576,7 +580,7 @@ export default function Create() {
           opacity: 0.8;
         }
         .empty__subjects {
-          color: #587299;
+          color: #000;
           display: block;
           text-align: center;
         }
@@ -584,6 +588,33 @@ export default function Create() {
           margin: 0px auto;
           max-width: 660px;
           padding: 50px 20px;
+        }
+
+        @font-face {
+            font-family: 'suisse_intlbook_italic';
+            src: url('./fonts/suisseintl-bookitalic-webfont.woff2') format('woff2'),
+                 url('./fonts/suisseintl-bookitalic-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+
+        }
+
+        @font-face {
+            font-family: 'suisse_intlbook';
+            src: url('./fonts/suisseintl-book-webfont.woff2') format('woff2'),
+                 url('./fonts/suisseintl-book-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+
+        }
+
+        @font-face {
+            font-family: 'messerv2.1condensed';
+            src: url('./fonts/messerv2.1-condensed-webfont.woff2') format('woff2'),
+                 url('./fonts/messerv2.1-condensed-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+
         }
       `}</style>
     </Layout>

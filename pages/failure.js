@@ -41,14 +41,14 @@ function Failure({ query }) {
 
         .failure > h1 {
           font-size: 40px;
-          color: #0f0857;
+          color: #000;
           margin: 0px;
         }
 
         .failure > p {
           font-size: 18px;
           line-height: 150%;
-          color: rgb(107, 114, 128);
+          color: #80806b;
           margin-block-start: 0px;
         }
 
@@ -70,13 +70,13 @@ function Failure({ query }) {
         }
 
         .failure > a:nth-of-type(1) {
-          background-color: #dde1ee;
-          color: #0f0857;
+          background-color: #edff38;
+          color: #000;
         }
 
         .failure > a:nth-of-type(2) {
-          background-color: #0f0857;
-          color: #fff;
+          background-color: #000;
+          color: #edff38;
         }
       `}</style>
     </Layout>

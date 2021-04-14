@@ -395,7 +395,7 @@ function Vote({ query }) {
         }
 
         .event__summary > h2 {
-          color: #00d182;
+          color: #000;
           margin: 0px;
         }
 
@@ -410,8 +410,8 @@ function Vote({ query }) {
           display: inline-block;
           text-decoration: none;
           transition: 100ms ease-in-out;
-          background-color: #0f0857;
-          color: #fff;
+          background-color: #000;
+          color: #edff38;
         }
 
         .event__summary > a:hover {
@@ -424,13 +424,13 @@ function Vote({ query }) {
           border-radius: 10px;
           display: inline-block;
           margin: 50px 20px 0px 20px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           padding: 30px 0px;
         }
 
         .vote__loading > h1,
         .vote__info_heading > h1 {
-          color: #0f0857;
+          color: #000;
           margin: 0px;
         }
 
@@ -440,7 +440,7 @@ function Vote({ query }) {
         }
 
         .event__options > h2 {
-          color: #0f0857;
+          color: #000;
           margin-block-end: 0px;
         }
 
@@ -453,14 +453,14 @@ function Vote({ query }) {
         .vote__info_heading > p {
           font-size: 18px;
           line-height: 150%;
-          color: rgb(107, 114, 128);
+          color: #80806b;
           margin: 0px;
         }
 
         .event__option_item {
           background-color: #fff;
           border-radius: 8px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
           max-width: 700px;
           width: 100%;
@@ -474,7 +474,7 @@ function Vote({ query }) {
 
         .event__option_item label {
           display: block;
-          color: #587299;
+          color: #000;
           font-weight: bold;
           font-size: 18px;
           text-transform: uppercase;
@@ -508,7 +508,7 @@ function Vote({ query }) {
           width: calc(100% - 10px);
           font-size: 18px;
           border-radius: 5px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           padding: 10px 5px;
           background-color: #fff;
         }
@@ -547,12 +547,14 @@ function Vote({ query }) {
 
         .item__vote_buttons > button:nth-child(1) {
           margin-right: 1%;
-          background-color: #0f0557;
+          background-color: #edff38;
+          color: #000;
         }
 
         .item__vote_buttons > button:nth-child(2) {
           margin-left: 1%;
-          background-color: #00cc7e;
+          background-color: #000;
+          color: #edff38;
         }
 
         .item__vote_buttons > button:hover {
@@ -560,13 +562,13 @@ function Vote({ query }) {
         }
 
         .button__disabled {
-          background-color: #e7eaf3 !important;
+          background-color: #f1f2e5 !important;
           color: #000 !important;
           cursor: not-allowed !important;
         }
 
         .item__vote_credits {
-          color: rgb(107, 114, 128);
+          color: #80806b;
           font-size: 14px;
           text-align: right;
           display: block;
@@ -578,8 +580,8 @@ function Vote({ query }) {
           width: 100%;
           display: inline-block;
           border-radius: 5px;
-          background-color: #0f0857;
-          color: #fff;
+          background-color: #000;
+          color: #edff38;
           font-size: 16px;
           transition: 100ms ease-in-out;
           border: none;

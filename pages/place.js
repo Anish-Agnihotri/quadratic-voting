@@ -136,7 +136,7 @@ function Place({ query }) {
           background-color: #fff;
           margin: 20px;
           border-radius: 8px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
           padding: 15px;
           vertical-align: top;
@@ -145,12 +145,12 @@ function Place({ query }) {
         }
 
         .place__votes > h2 {
-          color: #0f0857;
+          color: #000;
           margin-block-end: 0px;
         }
 
         .place__votes > p {
-          color: #587299;
+          color: #80806b;
           margin-block-start: 5px;
           margin-block-end: 40px;
           line-height: 150%;
@@ -160,7 +160,7 @@ function Place({ query }) {
           width: calc(100% - 10px);
           font-size: 18px;
           border-radius: 5px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           margin-top: 15px;
           padding: 10px 5px;
         }
@@ -170,8 +170,8 @@ function Place({ query }) {
           width: 100%;
           display: inline-block;
           border-radius: 5px;
-          background-color: #0f0857;
-          color: #fff;
+          background-color: #000;
+          color: #edff38;
           font-size: 16px;
           transition: 100ms ease-in-out;
           border: none;
@@ -184,7 +184,7 @@ function Place({ query }) {
         }
 
         .place__votes > span {
-          color: #587299;
+          color: #80806b;
           font-size: 13px;
           margin-top: 45px;
           display: block;

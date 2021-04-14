@@ -205,7 +205,7 @@ function Event({ query }) {
                 <div className="loading__chart">
                   <HashLoader
                     size={50}
-                    color="#0f0857"
+                    color="#000"
                     css={{ display: "inline-block" }}
                   />
                   <h3>Loading Chart...</h3>
@@ -262,19 +262,19 @@ function Event({ query }) {
 
         .event > h1 {
           font-size: 40px;
-          color: #0f0857;
+          color: #000;
           margin: 0px;
         }
 
         .event__information {
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           padding: 10px;
           border-radius: 10px;
           margin: 20px 0px;
         }
 
         .event__information > h2 {
-          color: #00d182;
+          color: #000;
           font-size: 22px;
           margin-block-end: 0px;
         }
@@ -282,7 +282,7 @@ function Event({ query }) {
         .event__information > p {
           font-size: 18px;
           line-height: 150%;
-          color: rgb(107, 114, 128);
+          color: #80806b;
           margin-block-start: 0px;
           display: block;
           word-wrap: break-word;
@@ -292,7 +292,7 @@ function Event({ query }) {
           background-color: #fff;
           background-color: #fff;
           border-radius: 8px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           box-shadow: 0 0 35px rgba(127, 150, 174, 0.125);
           padding: 15px;
           width: calc(100% - 30px);
@@ -303,7 +303,7 @@ function Event({ query }) {
         .event__section > label,
         .event__sub_section > label {
           display: block;
-          color: #587299;
+          color: #000;
           font-weight: bold;
           font-size: 18px;
           text-transform: uppercase;
@@ -318,7 +318,7 @@ function Event({ query }) {
           max-width: calc(100% - 10px);
           font-size: 18px;
           border-radius: 5px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           margin-top: 15px;
           padding: 8px 5px;
         }
@@ -329,7 +329,7 @@ function Event({ query }) {
           height: 120px;
           padding: 10px;
           border-radius: 5px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           font-family: "Roboto", sans-serif;
           font-size: 14px;
         }
@@ -339,7 +339,7 @@ function Event({ query }) {
           display: inline-block;
           margin: 10px;
           padding: 15px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           border-radius: 5px;
           vertical-align: top;
         }
@@ -352,7 +352,7 @@ function Event({ query }) {
           margin-top: 20px;
           width: calc(100% - 20px);
           padding: 10px;
-          border: 1px solid #e7eaf3;
+          border: 1px solid #f1f2e5;
           border-radius: 5px;
         }
 
@@ -362,14 +362,13 @@ function Event({ query }) {
         }
 
         .loading__chart > h3 {
-          color: #0f0857;
+          color: #000;
           font-size: 22px;
           margin-block-start: 10px;
           margin-block-end: 0px;
         }
 
         .private__label {
-          color: #cc0000 !important;
         }
 
         .download__button {
@@ -377,8 +376,8 @@ function Event({ query }) {
           width: 100%;
           display: inline-block;
           border-radius: 5px;
-          background-color: #0f0857;
-          color: #fff;
+          background-color: #000;
+          color: #edff38;
           font-size: 18px;
           transition: 100ms ease-in-out;
           border: none;
