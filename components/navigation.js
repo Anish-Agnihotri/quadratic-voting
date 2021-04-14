@@ -18,7 +18,6 @@ export default function Navigation(props) {
           padding: 10px 20px 0px 20px;
           height: 30px;
         }
-
         .navigation > a {
           float: left;
           text-decoration: none;
@@ -26,11 +25,9 @@ export default function Navigation(props) {
           border-bottom: 1px solid #0f0857;
           transition: 50ms ease-in-out;
         }
-
         .navigation > a:hover {
           opacity: 0.8;
         }
-
         .navigation > span {
           float: right;
           font-weight: bold;

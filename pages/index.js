@@ -24,9 +24,9 @@ export default function Home() {
           <div className="home__cta_button">
             <img src="/vectors/create_event.svg" alt="Create event" />
             <h2>Create an event</h2>
-            <p>Setup Quadratic Voting for your event.</p>
+            <p>Set up Quadratic Voting for your event.</p>
             <Link href="/create">
-              <a>Setup Event</a>
+              <a>Set Up Event</a>
             </Link>
           </div>
           <div className="home__cta_button">
@@ -46,34 +46,28 @@ export default function Home() {
             padding: 50px 20px 0px 20px;
             margin: 0px auto;
           }
-
           .home__content > h1 {
             font-size: 40px;
             color: #0f0857;
             margin: 0px;
           }
-
           .home__content > h2 {
             color: #00d182;
             margin-block-start: 0px;
           }
-
           .home__content > h2:nth-of-type(2) {
             color: #0f0857;
             margin-block-end: 0px;
             margin-block-start: 60px;
           }
-
           .home__content > p {
             font-size: 18px;
             line-height: 150%;
             color: rgb(107, 114, 128);
           }
-
           .home__cta {
             padding-top: 20px;
           }
-
           .home__cta_button {
             display: inline-block;
             max-width: 270px;
@@ -86,23 +80,20 @@ export default function Home() {
             padding: 15px;
             vertical-align: top;
           }
-
           .home__cta_button > img {
             height: 90px;
             margin-top: 15px;
           }
-
           .home__cta_button > h2 {
             color: #0f0857;
             margin-block-end: 0px;
           }
-
           .home__cta_button > p {
             color: #587299;
+            font-size: 15px;
             margin-block-start: 5px;
             margin-block-end: 40px;
           }
-
           .home__cta_button > a {
             text-decoration: none;
             padding: 12px 0px;
@@ -114,7 +105,6 @@ export default function Home() {
             font-size: 18px;
             transition: 50ms ease-in-out;
           }
-
           .home__cta_button > a:hover {
             opacity: 0.8;
           }

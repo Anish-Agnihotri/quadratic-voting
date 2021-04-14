@@ -16,8 +16,8 @@ import Navigation from "components/navigation"; // Navigation bar
 
 // Initial global settings
 const defaultGlobalSettings = {
-  event_title: "My Event Title",
-  event_description: "My Event Description",
+  event_title: "",
+  event_description: "",
   num_voters: 10,
   credits_per_voter: 100,
   start_event_date: moment(),
@@ -183,6 +183,7 @@ export default function Create() {
             <input
               type="text"
               id="event_title"
+              placeholder="My Event Title"
               value={globalSettings.event_title}
               onChange={(e) => setEventData("event_title", e.target.value)}
             />
@@ -195,6 +196,7 @@ export default function Create() {
             <input
               type="text"
               id="event_description"
+              placeholder="My Event Description"
               value={globalSettings.event_description}
               maxLength="240"
               onChange={(e) =>
@@ -397,21 +399,17 @@ export default function Create() {
           margin-top: 15px;
           padding: 5px 0px 5px 5px;
         }
-
         .accordion__button {
           background-color: #e7eaf3;
           max-width: calc(100% - 36px);
         }
-
         .accordion__button:hover {
           background-color: #dde1ee;
         }
-
         .accordion__value {
           margin: 0px 0px 10px 0px;
           width: 100%;
         }
-
         .accordion__value > label {
           display: block;
           color: #587299;
@@ -419,7 +417,6 @@ export default function Create() {
           font-size: 18px;
           text-transform: uppercase;
         }
-
         .accordion__value > textarea {
           width: calc(100% - 10px);
           max-width: calc(100% - 10px);
@@ -430,7 +427,6 @@ export default function Create() {
           padding: 8px 5px;
           font-family: "Roboto", sans-serif;
         }
-
         .accordion__value > a {
           text-decoration: none;
           color: #0f0857;
@@ -442,16 +438,13 @@ export default function Create() {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-
         .accordion__value > a:hover {
           opacity: 0.8;
         }
-
         .accordion__buttons {
           text-align: center;
           padding-top: 10px;
         }
-
         .accordion__buttons > button {
           padding: 8px 15px;
           display: inline-block;
@@ -464,15 +457,12 @@ export default function Create() {
           cursor: pointer;
           margin: 0px 10px;
         }
-
         .accordion__buttons > button:nth-child(2) {
           background-color: #ff1c48;
         }
-
         .accordion__buttons > button:hover {
           opacity: 0.8;
         }
-
         div:focus,
         button:focus {
           outline: none;
@@ -484,19 +474,16 @@ export default function Create() {
         .create {
           padding-bottom: 80px;
         }
-
         .create__content {
           max-width: 700px;
           padding: 30px 20px 0px 20px;
           margin: 0px auto;
         }
-
         .create__content > h1 {
           font-size: 35px;
           color: #0f0857;
           margin: 0px;
         }
-
         .create__content > p,
         .create__settings > p {
           font-size: 18px;
@@ -504,7 +491,6 @@ export default function Create() {
           color: rgb(107, 114, 128);
           margin-block-start: 10px;
         }
-
         .create__settings {
           text-align: left;
           width: calc(100% - 40px);
@@ -512,21 +498,17 @@ export default function Create() {
           padding: 20px 20px;
           margin: 0px auto;
         }
-
         .create__settings > h2 {
           color: #0f0857;
           margin-block-end: 0px;
         }
-
         .create__settings > h3 {
           color: #0f0857;
           transform: translate(5px, 15px);
         }
-
         .create__settings > p {
           margin-block-start: 5px;
         }
-
         .create__settings_section {
           background-color: #fff;
           background-color: #fff;
@@ -537,7 +519,6 @@ export default function Create() {
           width: calc(100% - 30px);
           margin: 25px 0px;
         }
-
         .create__settings_section > label,
         .create__subject_form > div > label {
           display: block;
@@ -546,19 +527,15 @@ export default function Create() {
           font-size: 18px;
           text-transform: uppercase;
         }
-
         .create__settings_section > p {
           margin: 0px;
         }
-
         .create__subject_form > div {
           margin: 20px 0px;
         }
-
         .create__subject_form > div:nth-child(1) {
           margin-top: 0px;
         }
-
         .create__subject_form > div > input,
         .create__subject_form > div > textarea {
           width: calc(100% - 10px);
@@ -570,7 +547,6 @@ export default function Create() {
           padding: 8px 5px;
           font-family: "Roboto", sans-serif;
         }
-
         .create__subject_form > button,
         .create__event_button,
         .create__event_disabled {
@@ -585,30 +561,25 @@ export default function Create() {
           border: none;
           cursor: pointer;
         }
-
         .button__disabled,
         .create__event_disabled {
           background-color: #e7eaf3 !important;
           color: #000 !important;
           cursor: not-allowed !important;
         }
-
         .button__disabled:hover,
         .create__event_disabled:hover {
           opacity: 1 !important;
         }
-
         .create__subject_form > button:hover,
         .create__event_button:hover {
           opacity: 0.8;
         }
-
         .empty__subjects {
           color: #587299;
           display: block;
           text-align: center;
         }
-
         .create__submission {
           margin: 0px auto;
           max-width: 660px;
