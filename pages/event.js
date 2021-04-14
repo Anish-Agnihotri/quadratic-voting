@@ -115,6 +115,21 @@ function Event({ query }) {
           <p>
             {!loading && data ? data.event.event_description : "Loading..."}
           </p>
+          {data ? (
+            <>
+            {(moment() > moment(data.event.end_event_date)) ? (
+              <h3>This event has concluded. See results below!</h3>
+            ) : (
+              <>
+              {(moment() < moment(data.event.start_event_date)) ? (
+                <h3>This event begins {moment(data.event.start_event_date).format('MMMM Do YYYY, h:mm:ss a')}</h3>
+              ) : (
+                <h3>This event closes {moment(data.event.end_event_date).format('MMMM Do YYYY, h:mm:ss a')}</h3>
+              )}
+              </>
+            )}
+            </>
+          ) : null}
         </div>
 
         {/* Event public URL */}
