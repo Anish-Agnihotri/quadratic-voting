@@ -88,8 +88,9 @@ function Vote({ query }) {
    * @param {boolean} increment -/+ button toggle
    */
   const calculateShow = (current, increment) => {
+    const change = increment ? 1 : -1;
     const canOccur =
-      Math.abs(Math.pow(current, 2) - Math.pow(current + 1, 2)) <= credits;
+      Math.abs(Math.pow(current, 2) - Math.pow(current + change, 2)) <= credits;
     // Check for absolute squared value of current - absolute squared valueof current + 1 <= credits
 
     // If current votes === 0, and available credits === 0
