@@ -42,14 +42,6 @@ yarn
 yarn dev
 ```
 
-## Future development
-
-This project is **actively maintained**.
-
-There are currently plans to update this calculator based on community feedback. A few demanded items include better mechanisms of Sybil resistance (social OAuth logins), easy one-click self-deploys, and markdown support across voteable option fields.
-
-A sprint is planned within the next few weeks to address these pieces of feedback. I [encourage creating new issues](https://github.com/Anish-Agnihotri/Gitcoin-Exemplars/issues/new) to provide feedback, and I will try my best to incorporate it in the next sprint.
-
 ## License
 
 [GNU Affero General Public License v3.0](https://github.com/Anish-Agnihotri/quadratic-voting/blob/master/LICENSE)
