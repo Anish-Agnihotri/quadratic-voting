@@ -1,6 +1,5 @@
 import useSWR from "swr"; // State-while-revalidate
 import fetch from "unfetch"; // Fetch for requests
-import moment from "moment"; // Moment date parsing
 import Head from "next/head"; // Custom meta images
 import Layout from "components/layout"; // Layout wrapper
 import Navigation from "components/navigation"; // Navigation
@@ -25,6 +24,7 @@ function Event({ query }) {
     }
   );
 
+  console.log(data);
   /**
    * Admin view: download voter URLs as text file
    */
@@ -147,7 +147,7 @@ function Event({ query }) {
           <p>Quadratic Voting-weighted voting results</p>
           {!loading && data ? (
             <div className="chart">
-              <HorizontalBar data={data.chart} width={90} height={60} />
+              <HorizontalBar data={data.chart} width={50} />
             </div>
           ) : (
             <div className="loading__chart">
@@ -282,7 +282,7 @@ function Event({ query }) {
 
         .chart {
           margin-top: 20px;
-          width: calc(100% - 20px);
+          //width: calc(100% - 20px);
           padding: 10px;
           border: 1px solid #e7eaf3;
           border-radius: 5px;
