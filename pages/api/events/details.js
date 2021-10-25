@@ -1,4 +1,5 @@
 import prisma from "db"; // Import prisma
+import { timingSafeEqual } from "crypto";
 
 // --> /api/events/details
 export default async (req, res) => {
@@ -17,9 +18,14 @@ export default async (req, res) => {
     where: { event_uuid: id },
   });
 
-  // Check for administrator access based on passed secret_key
+  // Check for administrator access based on passed secret_key with node.js'
+  // crypto `timingSafeEqual` to prevent timing attacks.
   const isAdmin =
-    event.secret_key && event.secret_key === secret_key ? true : false;
+    event.secret_key &&
+    secret_key &&
+    event.secret_key.length === secret_key.length &&
+    timingSafeEqual(Buffer.from(event.secret_key), Buffer.from(secret_key));
+
   // After checking for administrator access, delete secret_key from event object
   delete event.secret_key;
 
