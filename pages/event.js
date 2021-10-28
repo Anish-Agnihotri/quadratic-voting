@@ -2,6 +2,7 @@ import useSWR from "swr"; // State-while-revalidate
 import fetch from "unfetch"; // Fetch for requests
 import Head from "next/head"; // Custom meta images
 import Layout from "components/layout"; // Layout wrapper
+import CsvDownload from "react-json-to-csv"; // CSV Download button
 import Navigation from "components/navigation"; // Navigation
 import { HorizontalBar } from "react-chartjs-2"; // Horizontal bar graph
 import HashLoader from "react-spinners/HashLoader"; // Loader
@@ -24,7 +25,34 @@ function Event({ query }) {
     }
   );
 
-  console.log(data);
+  /**
+   * Admin view: download all votes by voter id as a CSV
+   * @returns {Object[]} Array of votes by voter id
+   */
+  const downloadCSVResults = () => {
+    // Array of csv rows
+    let csv = [];
+
+    // For each voter
+    for (let i = 0; i < data.event.voters.length; i++) {
+      const voter = data.event.voters[i]; // Collect voter
+
+      // Setup voter row
+      let row = {};
+      row["Voter ID"] = voter.id;
+
+      // For each vote
+      for (let j = 0; j < voter.vote_data.length; j++) {
+        // Add column for vote tally
+        row[`${voter.vote_data[j].title}`] = voter.vote_data[j].votes;
+      }
+
+      csv.push(row); // Push voter row to csv
+    }
+
+    return csv;
+  };
+
   /**
    * Admin view: download voter URLs as text file
    */
@@ -100,20 +128,32 @@ function Event({ query }) {
           />
         </div>
 
-        {/* Event private URL */}
         {query.id !== "" &&
         query.secret !== "" &&
         query.secret !== undefined &&
         !loading &&
         data ? (
-          <div className="event__section">
-            <label className="private__label">Private Admin URL</label>
-            <p>Save this URL to manage event and make changes</p>
-            <input
-              value={`https://quadraticvote.co/event?id=${query.id}&secret=${query.secret}`}
-              readOnly
-            />
-          </div>
+          <>
+            {/* Event private URL */}
+            <div className="event__section">
+              <label className="private__label">Private Admin URL</label>
+              <p>Save this URL to manage event and make changes</p>
+              <input
+                value={`https://quadraticvote.co/event?id=${query.id}&secret=${query.secret}`}
+                readOnly
+              />
+            </div>
+
+            {/* Event download data as CSV */}
+            <div className="event__section csv__download">
+              <label className="private__label">CSV Results</label>
+              <p>Download all quadratic votes, by voter ID, in a CSV</p>
+              <CsvDownload
+                data={downloadCSVResults()}
+                filename="qv-export.csv"
+              />
+            </div>
+          </>
         ) : null}
 
         {/* Event copyable links */}
@@ -183,6 +223,29 @@ function Event({ query }) {
           </div>
         </div>
       </div>
+
+      {/* Global styles */}
+      <style jsx global>{`
+        .download__button,
+        .csv__download > button {
+          padding: 12px 0px;
+          width: 100%;
+          display: inline-block;
+          border-radius: 5px;
+          background-color: #0f0857;
+          color: #fff;
+          font-size: 18px;
+          transition: 100ms ease-in-out;
+          border: none;
+          cursor: pointer;
+          margin-top: 15px;
+        }
+
+        .download__button:hover,
+        .csv__download > button:hover {
+          opacity: 0.8;
+        }
+      `}</style>
 
       {/* Scoped styles */}
       <style jsx>{`
@@ -302,24 +365,6 @@ function Event({ query }) {
 
         .private__label {
           color: #cc0000 !important;
-        }
-
-        .download__button {
-          padding: 12px 0px;
-          width: 100%;
-          display: inline-block;
-          border-radius: 5px;
-          background-color: #0f0857;
-          color: #fff;
-          font-size: 18px;
-          transition: 100ms ease-in-out;
-          border: none;
-          cursor: pointer;
-          margin-top: 15px;
-        }
-
-        .download__button:hover {
-          opacity: 0.8;
         }
 
         @media screen and (max-width: 700px) {
