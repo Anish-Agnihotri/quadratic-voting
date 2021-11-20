@@ -187,7 +187,13 @@ function Event({ query }) {
           <p>Quadratic Voting-weighted voting results</p>
           {!loading && data ? (
             <div className="chart">
-              <HorizontalBar data={data.chart} width={50} />
+              <HorizontalBar
+                data={data.chart}
+                width={50}
+                options={{
+                  scales: { yAxes: [{ ticks: { autoSkip: false } }] }
+                }}
+              />
             </div>
           ) : (
             <div className="loading__chart">
